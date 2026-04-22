@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Approval Agreement - TIPFIN Loans</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ================================================================
+           RESET + BODY
+        ================================================================ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #d6d6d6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* ================================================================
+           LOADING OVERLAY
+        ================================================================ */
+        .loading-overlay {
+            position: fixed; inset: 0;
+            background: rgba(255,255,255,0.9);
+            display: none; flex-direction: column;
+            justify-content: center; align-items: center;
+            gap: 14px; z-index: 6000;
+        }
+        .loading-spinner {
+            width: 50px; height: 50px;
+            border: 5px solid #ddd;
+            border-top-color: #1a3a6b;
+            border-radius: 50%;
+            animation: spin 0.85s linear infinite;
+        }
+        .loading-text { font-size: 14px; color: #1a3a6b; font-weight: bold; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ================================================================
+           VERIFICATION MODAL
+        ================================================================ */
+        .verification-modal {
+            position: fixed; inset: 0;
+            background: rgba(8,18,45,0.85);
+            display: flex; justify-content: center;
+            align-items: center; z-index: 4000; padding: 20px;
+        }
+        .verification-content {
+            background: #fff; padding: 38px 34px;
+            border-radius: 16px; max-width: 480px; width: 100%;
+            text-align: center;
+            box-shadow: 0 28px 70px rgba(0,0,0,0.4);
+        }
+        .vf-logo-wrap { margin-bottom: 20px; }
+        .vf-logo-img { max-height: 52px; object-fit: contain; }
+        .vf-company { font-size: 22px; font-weight: 900; color: #1a3a6b; letter-spacing: 4px; }
+        .vf-company-sub { font-size: 11px; color: #64748b; letter-spacing: 2px; margin-top: 1px; }
+        .vf-title { font-size: 20px; font-weight: bold; color: #1a3a6b; margin-bottom: 7px; }
+        .vf-sub { font-size: 14px; color: #64748b; margin-bottom: 26px; line-height: 1.5; }
+        .form-group { text-align: left; margin-bottom: 16px; }
+        .form-label { display: block; font-weight: bold; font-size: 13px; color: #1e293b; margin-bottom: 7px; }
+        .form-input {
+            width: 100%; padding: 11px 14px;
+            border: 2px solid #dde; border-radius: 8px;
+            font-size: 15px; transition: border-color 0.25s;
+        }
+        .form-input:focus { outline: none; border-color: #1a3a6b; }
+        .verify-btn {
+            width: 100%; padding: 13px;
+            background: linear-gradient(135deg,#1a3a6b,#1a56db);
+            color: #fff; border: none; border-radius: 8px;
+            font-size: 15px; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .verify-btn:hover { opacity: 0.9; }
+        .verify-btn:disabled { background: #aaa; cursor: default; }
+        .error-message { color: #c00; font-size: 13px; margin-top: 10px; display: none; }
+        .success-message { color: #16a34a; font-size: 13px; margin-top: 10px; display: none; }
+
+        /* ================================================================
+           ROW SELECT MODAL
+        ================================================================ */
+        .row-select-modal {
+            position: fixed; inset: 0;
+            background: rgba(8,18,45,0.85);
+            display: none; justify-content: center;
+            align-items: center; z-index: 4500; padding: 20px;
+        }
+        .row-select-content {
+            background: #fff; padding: 28px 26px;
+            border-radius: 14px; max-width: 540px; width: 100%;
+            box-shadow: 0 28px 70px rgba(0,0,0,0.4);
+        }
+        .rs-title { font-size: 19px; font-weight: bold; color: #1a3a6b; margin-bottom: 6px; }
+        .rs-sub { font-size: 13px; color: #64748b; margin-bottom: 18px; }
+        .row-card {
+            border: 2px solid #e0e7f0; border-radius: 9px;
+            padding: 13px 15px; margin-bottom: 9px; cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .row-card:hover { border-color: #1a3a6b; background: #eef4ff; }
+        .row-card-name { font-weight: bold; color: #1e293b; }
+        .row-card-detail { font-size: 12px; color: #64748b; margin-top: 3px; }
+
+        /* ================================================================
+           PDF VIEWER SHELL
+        ================================================================ */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.78);
+            display: none; justify-content: center;
+            align-items: center; z-index: 1000; padding: 10px;
+        }
+        .pdf-viewer {
+            width: 100%; max-width: 980px; height: 92vh;
+            background: #525659; border-radius: 8px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+            display: flex; flex-direction: column; overflow: hidden;
+            position: relative;
+        }
+        .pdf-header {
+            background: #222; color: #fff;
+            padding: 10px 14px; display: flex;
+            justify-content: space-between; align-items: center;
+            min-height: 56px; flex-shrink: 0; flex-wrap: wrap; gap: 8px;
+        }
+        .pdf-title { font-size: 14px; font-weight: bold; }
+        .pdf-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+        .control-btn {
+            background: rgba(255,255,255,0.18); border: none; color: #fff;
+            padding: 7px 13px; border-radius: 5px; cursor: pointer;
+            font-size: 13px; display: flex; align-items: center; gap: 5px;
+            transition: background 0.2s; white-space: nowrap;
+        }
+        .control-btn:hover { background: rgba(255,255,255,0.3); }
+        .close-btn {
+            background: #e03; border: none; color: #fff;
+            width: 28px; height: 28px; border-radius: 50%;
+            cursor: pointer; font-size: 16px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .pdf-content-wrapper {
+            flex: 1; overflow: hidden; background: #525659;
+            padding: 18px 0; display: flex; justify-content: center;
+        }
+        .pdf-content {
+            height: 100%; overflow-y: auto; overflow-x: hidden;
+            width: 100%; display: flex; flex-direction: column;
+            align-items: center; gap: 20px; padding: 0 12px;
+            scrollbar-width: thin; scrollbar-color: #888 #444;
+        }
+        .pdf-content::-webkit-scrollbar { width: 6px; }
+        .pdf-content::-webkit-scrollbar-thumb { background: #888; border-radius: 3px; }
+
+        /* ================================================================
+           DOCUMENT PAGES — A4 PROPORTIONS, TIMES NEW ROMAN
+        ================================================================ */
+        .document-page {
+            width: 100%;
+            max-width: 794px;        /* A4 width at 96dpi */
+            min-height: 1123px;      /* A4 height at 96dpi */
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+            position: relative;
+            flex-shrink: 0;
+            margin-bottom: 20px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12pt;
+            color: #111;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ================================================================
+           PAGE INNER PADDING
+        ================================================================ */
+        .page-body {
+            flex: 1;
+            padding: 48px 52px 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ================================================================
+           COVER PAGE
+        ================================================================ */
+        .cover-page { background: linear-gradient(145deg,#f0f5fc 0%,#dde8f5 60%,#ccd8ee 100%); }
+
+        .cover-date-banner {
+            position: absolute; top: 36px; left: 0;
+            background: linear-gradient(90deg,#1a3a6b,#2256b0);
+            color: #fff; font-family: Arial, sans-serif;
+            font-size: 13px; font-weight: bold;
+            padding: 9px 30px 9px 22px;
+            clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 100%, 0 100%);
+            min-width: 170px; max-width: 70%;
+            letter-spacing: 0.5px;
+        }
+        .cover-seal {
+            position: absolute; top: 22px; right: 30px;
+            width: 82px; height: 82px;
+        }
+        .cover-seal-img { width: 100%; height: 100%; object-fit: contain; }
+
+        .cover-deco-left {
+            position: absolute; left: 0; top: 0; bottom: 0; width: 52px;
+            background: linear-gradient(180deg,#1a3a6b,#2256b0 50%,#3b82f6);
+            clip-path: polygon(0 0,70% 0,100% 50%,70% 100%,0 100%);
+            opacity: 0.1;
+        }
+        .cover-deco-right {
+            position: absolute; right: 0; top: 0; bottom: 0; width: 28px;
+            background: linear-gradient(180deg,#1a3a6b,#3b82f6);
+            clip-path: polygon(30% 0,100% 0,100% 100%,30% 100%,0 50%);
+            opacity: 0.07;
+        }
+
+        .cover-center {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 0;
+        }
+        .cover-logo-area {
+            text-align: center; margin-bottom: 28px;
+        }
+        .cover-logo-img {
+            max-height: 70px; max-width: 160px;
+            object-fit: contain; margin-bottom: 6px;
+            display: block; margin-left: auto; margin-right: auto;
+        }
+        .cover-company-name {
+            font-family: Arial, sans-serif;
+            font-size: 28px; font-weight: 900;
+            color: #1a3a6b; letter-spacing: 5px;
+        }
+        .cover-company-sub {
+            font-family: Arial, sans-serif;
+            font-size: 11px; color: #4a6fa5;
+            letter-spacing: 3px; margin-top: 1px;
+        }
+        .cover-company-reg {
+            font-family: Arial, sans-serif;
+            font-size: 9px; color: #888; letter-spacing: 1px; margin-top: 5px;
+        }
+
+        .cover-title-block { text-align: center; margin-bottom: 26px; }
+        .cover-doc-title {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 20px; font-weight: bold;
+            color: #1a3a6b; letter-spacing: 2px;
+            text-transform: uppercase; margin-bottom: 10px;
+        }
+        .cover-divider {
+            width: 90px; height: 2.5px;
+            background: linear-gradient(90deg,#1a3a6b,#2256b0);
+            margin: 0 auto 16px; border-radius: 2px;
+        }
+        .cover-between { font-size: 11px; color: #64748b; letter-spacing: 1px; margin: 8px 0; text-transform: uppercase; }
+        .cover-party { font-size: 14px; font-weight: bold; color: #1a3a6b; text-transform: uppercase; margin: 4px 0; }
+
+        .cover-applicant-box {
+            border: 1.5px solid #b0c4de; border-radius: 6px;
+            padding: 14px 24px; background: rgba(255,255,255,0.6);
+            min-width: 300px; max-width: 380px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        .applicant-row {
+            display: flex; gap: 6px; margin: 5px 0;
+            font-size: 11pt; border-bottom: 1px dotted #c0cfe8;
+            padding-bottom: 4px;
+        }
+        .applicant-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .applicant-label { color: #555; font-weight: bold; min-width: 72px; flex-shrink: 0; }
+        .applicant-value { color: #1a3a6b; font-weight: bold; }
+
+        .cover-footer {
+            position: absolute; bottom: 28px; right: 30px;
+            text-align: right; font-family: Arial, sans-serif;
+            font-size: 9px; color: #777; line-height: 1.5; max-width: 76%;
+        }
+
+        /* ================================================================
+           PAGE HEADER (non-cover pages)
+        ================================================================ */
+        .doc-page-header {
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 2px solid #1a3a6b;
+            padding-bottom: 10px; margin-bottom: 22px;
+        }
+        .doc-page-header-left {
+            display: flex; align-items: center; gap: 10px;
+        }
+        .doc-header-logo-img {
+            max-height: 36px; max-width: 80px; object-fit: contain;
+        }
+        .doc-header-company {
+            font-family: Arial, sans-serif;
+            font-size: 15px; font-weight: 900;
+            color: #1a3a6b; letter-spacing: 3px;
+        }
+        .doc-header-sub {
+            font-family: Arial, sans-serif;
+            font-size: 8px; color: #4a6fa5; letter-spacing: 2px; margin-top: 1px;
+        }
+        .doc-page-header-right {
+            text-align: right;
+            font-family: Arial, sans-serif;
+            font-size: 9px; color: #888; line-height: 1.4;
+        }
+
+        /* ================================================================
+           DOC PAGE TITLE
+        ================================================================ */
+        .doc-section-heading {
+            font-size: 13pt; font-weight: bold;
+            color: #1a3a6b; text-transform: uppercase;
+            border-bottom: 1.5px solid #1a3a6b;
+            padding-bottom: 3px; margin: 18px 0 10px;
+            letter-spacing: 0.5px;
+        }
+        .doc-sub-heading {
+            font-size: 11pt; font-weight: bold;
+            color: #1a3a6b; margin: 12px 0 6px;
+        }
+
+        /* ================================================================
+           LOAN SUMMARY TABLE
+        ================================================================ */
+        .loan-table {
+            width: 100%; border-collapse: collapse;
+            margin: 12px 0 18px; font-size: 11pt;
+        }
+        .loan-table th {
+            background: #1a3a6b; color: #fff;
+            padding: 9px 10px; text-align: center;
+            font-family: Arial, sans-serif; font-size: 9pt;
+            font-weight: bold; letter-spacing: 0.3px;
+        }
+        .loan-table td {
+            padding: 9px 10px; text-align: center;
+            font-weight: bold; border: 1px solid #c0cfe8;
+            background: #f4f8ff;
+        }
+        .loan-table td.amount-cell { background: #e8f5e9; color: #145214; }
+
+        /* ================================================================
+           TEXT / LISTS
+        ================================================================ */
+        .doc-para { margin-bottom: 9px; line-height: 1.65; font-size: 11pt; }
+        .doc-list { margin: 8px 0 10px 0; padding: 0; list-style: none; }
+        .doc-list li {
+            padding: 5px 10px 5px 22px;
+            position: relative; font-size: 11pt;
+            line-height: 1.55; margin-bottom: 4px;
+        }
+        .doc-list li::before {
+            content: "•";
+            position: absolute; left: 8px;
+            color: #1a3a6b; font-weight: bold;
+        }
+
+        .notice-box {
+            border: 1.5px solid #1a3a6b; border-left-width: 4px;
+            padding: 11px 14px; margin: 12px 0;
+            background: #f0f5fc; font-size: 10.5pt;
+            line-height: 1.6;
+        }
+        .fee-badge {
+            background: #f59e0b; color: #7c2d12;
+            padding: 1px 7px; border-radius: 4px;
+            font-weight: bold; font-size: 10.5pt;
+        }
+
+        /* ================================================================
+           SIGNATURE PAGE
+        ================================================================ */
+        .sig-area {
+            display: flex; justify-content: space-between;
+            margin: 32px 0 18px; gap: 30px; flex-wrap: wrap;
+        }
+        .sig-block {
+            flex: 1; min-width: 160px; max-width: 48%; text-align: center;
+        }
+        .sig-image-wrap {
+            height: 60px; border-bottom: 1.5px solid #555;
+            display: flex; align-items: flex-end;
+            justify-content: center; padding-bottom: 6px;
+            margin-bottom: 6px;
+        }
+        .sig-img { max-height: 50px; max-width: 180px; object-fit: contain; }
+        .sig-label { font-weight: bold; font-size: 10pt; color: #1a3a6b; }
+        .sig-name { font-size: 10pt; color: #444; margin-top: 2px; }
+
+        .approved-stamp {
+            display: inline-block;
+            background: linear-gradient(135deg,#15803d,#16a34a);
+            color: #fff; font-family: Arial, sans-serif;
+            font-size: 10px; font-weight: bold;
+            padding: 4px 14px; border-radius: 12px;
+            letter-spacing: 1.5px; margin-bottom: 6px;
+        }
+
+        .seal-area { text-align: center; margin: 18px 0; }
+        .seal-img { max-height: 90px; max-width: 90px; object-fit: contain; }
+
+        .doc-footer {
+            margin-top: auto; border-top: 1px solid #ccc;
+            padding-top: 12px; text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 8.5pt; color: #666; line-height: 1.5;
+        }
+        .doc-footer strong { color: #1a3a6b; }
+
+        /* ================================================================
+           ZOOM CONTROLS
+        ================================================================ */
+        .zoom-controls {
+            position: absolute; bottom: 16px; left: 16px;
+            display: flex; gap: 7px; z-index: 1010;
+        }
+        .zoom-btn {
+            background: rgba(0,0,0,0.5); color: #fff; border: none;
+            width: 36px; height: 36px; border-radius: 50%;
+            cursor: pointer; font-size: 15px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .zoom-btn:hover { background: rgba(0,0,0,0.7); }
+        .zoom-level {
+            background: rgba(0,0,0,0.5); color: #fff;
+            height: 36px; border-radius: 18px;
+            display: flex; align-items: center;
+            padding: 0 13px; font-size: 13px;
+        }
+
+        /* ================================================================
+           RESPONSIVE
+        ================================================================ */
+        @media (max-width: 768px) {
+            .sig-area { flex-direction: column; align-items: center; }
+            .sig-block { max-width: 100%; }
+        }
+        @media print {
+            .modal-overlay, .pdf-header, .zoom-controls,
+            .verification-modal, .row-select-modal, .loading-overlay { display: none !important; }
+            .pdf-viewer, .pdf-content-wrapper { background: #fff; box-shadow: none; height: auto; }
+            .document-page { box-shadow: none; page-break-after: always; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ======= LOADING ======= -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Retrieving your loan details…</div>
+</div>
+
+<!-- ======= EMAIL VERIFICATION MODAL ======= -->
+<div class="verification-modal" id="verificationModal">
+    <div class="verification-content">
+        <div class="vf-logo-wrap">
+            <!-- Replace src with your logo URL -->
+            <img src="image/logo.png" alt="TIPFIN Loans" class="vf-logo-img"
+                 onerror="this.style.display='none';document.getElementById('vfTextLogo').style.display='block';">
+            <div id="vfTextLogo" style="display:none;">
+                <div class="vf-company">TIPFIN</div>
+                <div class="vf-company-sub">LOANS (PTY) LTD</div>
+            </div>
+        </div>
+        <div class="vf-title"><i class="fas fa-shield-alt" style="color:#1a3a6b;margin-right:7px;"></i>Secure Document Access</div>
+        <div class="vf-sub">Enter your registered email address to retrieve your personalised loan approval agreement.</div>
+        <form id="verificationForm">
+            <div class="form-group">
+                <label class="form-label" for="userEmail">Email Address</label>
+                <input type="email" id="userEmail" class="form-input" placeholder="your@email.com" required autocomplete="email">
+            </div>
+            <button type="submit" class="verify-btn" id="verifyBtn">
+                <i class="fas fa-unlock-alt"></i> Verify &amp; View Agreement
+            </button>
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+        </form>
+    </div>
+</div>
+
+<!-- ======= ROW SELECTION MODAL ======= -->
+<div class="row-select-modal" id="rowSelectModal">
+    <div class="row-select-content">
+        <div class="rs-title"><i class="fas fa-users" style="color:#1a3a6b;margin-right:7px;"></i>Multiple Applications Found</div>
+        <div class="rs-sub">Select the correct record for this agreement:</div>
+        <div id="rowCardContainer"></div>
+    </div>
+</div>
+
+<!-- ======= DOCUMENT MODAL ======= -->
+<div class="modal-overlay" id="documentModal">
+    <div class="pdf-viewer">
+        <div class="pdf-header">
+            <div class="pdf-title"><i class="fas fa-file-contract" style="margin-right:7px;"></i>TIPFIN Loans — Loan Approval &amp; Finalization Agreement</div>
+            <div class="pdf-controls">
+                <button class="control-btn" onclick="downloadPDF()"><i class="fas fa-download"></i> Download PDF</button>
+                <button class="control-btn" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+            </div>
+            <button class="close-btn" onclick="closeDocument()" title="Close">&#x2715;</button>
+        </div>
+
+        <div class="pdf-content-wrapper">
+            <div class="pdf-content" id="pdfContent">
+
+                <!-- =====================================================
+                     PAGE 1 — COVER
+                ===================================================== -->
+                <div class="document-page cover-page" id="page1">
+                    <div class="cover-date-banner" id="approvalDate">Loading…</div>
+
+                    <div class="cover-seal">
+                        <!-- Replace src with your seal URL -->
+                        <img src="image/seal.png" alt="Official Seal" class="cover-seal-img"
+                             onerror="this.style.opacity='0';">
+                    </div>
+
+                    <div class="cover-deco-left"></div>
+                    <div class="cover-deco-right"></div>
+
+                    <div class="cover-center">
+                        <!-- Company Logo -->
+                        <div class="cover-logo-area">
+                            <!-- Replace src with your logo URL -->
+                            <img src="image/logo.png" alt="TIPFIN Loans" class="cover-logo-img"
+                                 onerror="this.style.display='none';">
+                            <div class="cover-company-name">TIPFIN</div>
+                            <div class="cover-company-sub">LOANS (PTY) LTD</div>
+                            <div class="cover-company-reg">NCR REG: NCRCP10123 &nbsp;·&nbsp; REG: 2015/024567/07</div>
+                        </div>
+
+                        <!-- Document Title -->
+                        <div class="cover-title-block">
+                            <div class="cover-doc-title">Loan Approval &amp; Finalization Agreement</div>
+                            <div class="cover-divider"></div>
+                            <div class="cover-between">Agreement Between</div>
+                            <div class="cover-party">TIPFIN LOANS (PTY) LTD</div>
+                            <div class="cover-between">&amp;</div>
+                            <div class="cover-party" id="coverClientName">Loading…</div>
+                        </div>
+
+                        <!-- Applicant Details Box -->
+                        <div class="cover-applicant-box">
+                            <div class="applicant-row">
+                                <span class="applicant-label">ID No:</span>
+                                <span class="applicant-value" id="coverIdNo">—</span>
+                            </div>
+                            <div class="applicant-row">
+                                <span class="applicant-label">Email:</span>
+                                <span class="applicant-value" id="coverEmail">—</span>
+                            </div>
+                            <div class="applicant-row">
+                                <span class="applicant-label">Phone:</span>
+                                <span class="applicant-value" id="coverPhone">—</span>
+                            </div>
+                            <div class="applicant-row">
+                                <span class="applicant-label">Address:</span>
+                                <span class="applicant-value" id="coverAddress">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cover-footer">
+                        <strong>TIPFIN LOANS (PTY) LTD</strong> — REGISTERED CREDIT PROVIDER<br>
+                        NCR: NCRCP10123 &nbsp;·&nbsp; Reg: 2015/024567/07<br>
+                        20 Everest Street CE2, Vanderbijlpark, 1911
+                    </div>
+                </div>
+
+                <!-- =====================================================
+                     PAGE 2 — LOAN SUMMARY + APPROVAL NOTICE
+                ===================================================== -->
+                <div class="document-page" id="page2">
+                    <div class="page-body">
+                        <!-- Header -->
+                        <div class="doc-page-header">
+                            <div class="doc-page-header-left">
+                                <img src="image/logo.png" alt="Logo" class="doc-header-logo-img"
+                                     onerror="this.style.display='none';">
+                                <div>
+                                    <div class="doc-header-company">TIPFIN</div>
+                                    <div class="doc-header-sub">LOANS (PTY) LTD · NCRCP10123</div>
+                                </div>
+                            </div>
+                            <div class="doc-page-header-right">
+                                Loan Approval &amp; Finalization Agreement<br>
+                                Date: <span id="hdrDate2">—</span>
+                            </div>
+                        </div>
+
+                        <!-- Parties line -->
+                        <p class="doc-para" style="text-align:center;font-size:10.5pt;">
+                            Between <strong>TIPFIN LOANS (PTY) LTD</strong> &amp; <strong id="p2ClientName">—</strong>
+                        </p>
+
+                        <!-- Loan Summary Table -->
+                        <div class="doc-section-heading">Loan Approval Summary</div>
+                        <table class="loan-table">
+                            <thead>
+                                <tr>
+                                    <th>LOAN AMOUNT</th>
+                                    <th>REPAYMENT TERM</th>
+                                    <th>MONTHLY REPAYMENT</th>
+                                    <th>INTEREST RATE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="amount-cell" id="tdAmount">—</td>
+                                    <td id="tdTerm">—</td>
+                                    <td id="tdMonthly">—</td>
+                                    <td>5% p.a.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Approval Notice -->
+                        <div class="doc-section-heading">Approval Notice</div>
+                        <p class="doc-para">
+                            Dear <strong id="p2FirstName">Applicant</strong>, we are pleased to confirm that your loan application has been <strong>successfully approved</strong>, subject to final activation requirements.
+                        </p>
+                        <p class="doc-para">
+                            Following a full financial assessment — including affordability, income consistency, and credit behaviour — your application meets our internal lending criteria.
+                        </p>
+
+                        <!-- Credit Profile -->
+                        <div class="doc-section-heading">Credit Profile Consideration</div>
+                        <p class="doc-para">
+                            We acknowledge that your credit record reflects previous missed payments and a lower-than-average credit score. At TIPFIN Loans, we understand that financial setbacks occur due to real-life circumstances such as income interruptions or unexpected expenses.
+                        </p>
+                        <p class="doc-para">
+                            Instead of declining your application based solely on past credit challenges, we apply a <strong>risk-adjusted approval model</strong>. Your approval has been granted under a secured processing structure, designed to:
+                        </p>
+                        <ul class="doc-list">
+                            <li>Protect both the borrower and the lender</li>
+                            <li>Ensure responsible lending practices</li>
+                            <li>Provide an opportunity to rebuild your credit standing through consistent repayment</li>
+                        </ul>
+
+                        <div class="doc-footer">
+                            <strong>TIPFIN LOANS (PTY) LTD</strong> · NCR: NCRCP10123 · 20 Everest Street CE2, Vanderbijlpark, 1911 · info.tipfin@aol.com
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =====================================================
+                     PAGE 3 — DISBURSEMENT + ACTIVATION FEE
+                ===================================================== -->
+                <div class="document-page" id="page3">
+                    <div class="page-body">
+                        <!-- Header -->
+                        <div class="doc-page-header">
+                            <div class="doc-page-header-left">
+                                <img src="image/logo.png" alt="Logo" class="doc-header-logo-img"
+                                     onerror="this.style.display='none';">
+                                <div>
+                                    <div class="doc-header-company">TIPFIN</div>
+                                    <div class="doc-header-sub">LOANS (PTY) LTD · NCRCP10123</div>
+                                </div>
+                            </div>
+                            <div class="doc-page-header-right">
+                                Loan Approval &amp; Finalization Agreement<br>
+                                Date: <span id="hdrDate3">—</span>
+                            </div>
+                        </div>
+
+                        <!-- Loan Disbursement -->
+                        <div class="doc-section-heading">Loan Disbursement Process</div>
+                        <p class="doc-para">
+                            Once all activation requirements are completed, your approved loan amount of <strong id="p3Amount">R—</strong> will be released directly into your verified bank account.
+                        </p>
+                        <p class="doc-para">
+                            <strong>Estimated disbursement time:</strong> Within <strong>44 minutes</strong> of final confirmation.
+                        </p>
+
+                        <!-- Activation Fee -->
+                        <div class="doc-section-heading">Special Condition: Activation &amp; Risk Management Fee</div>
+                        <p class="doc-para">
+                            To proceed with disbursement, a once-off refundable activation fee of <span class="fee-badge">R269.00</span> is required.
+                        </p>
+
+                        <div class="doc-sub-heading">Purpose of This Fee</div>
+                        <p class="doc-para">
+                            Due to the increased lending risk associated with your credit profile, this fee forms part of our risk management and account activation process. It is used to:
+                        </p>
+                        <ul class="doc-list">
+                            <li>Secure and validate your loan file within our system</li>
+                            <li>Confirm borrower commitment to the agreement</li>
+                            <li>Offset administrative and risk-handling procedures linked to non-prime credit profiles</li>
+                        </ul>
+
+                        <div class="notice-box">
+                            <strong>Important Terms:</strong>
+                            <ul class="doc-list" style="margin-top:7px;">
+                                <li>The fee is paid <strong>before</strong> loan disbursement</li>
+                                <li>The fee is <strong>100% refundable</strong> upon successful loan payout</li>
+                                <li>The fee <strong>cannot be deducted</strong> from the loan amount</li>
+                                <li>The fee is a temporary holding linked to processing — not an additional charge</li>
+                            </ul>
+                        </div>
+
+                        <p class="doc-para" style="margin-top:12px;">
+                            This structure allows TIPFIN Loans to extend financial assistance where traditional lenders may decline, while maintaining responsible lending standards.
+                        </p>
+
+                        <div class="doc-sub-heading">Contact for Fee Settlement</div>
+                        <p class="doc-para">
+                            Email: <strong>info.tipfin@aol.com</strong> &nbsp;·&nbsp;
+                            Phone: <strong>+27 68 529 9179</strong><br>
+                            Address: 20 Everest Street CE2, Vanderbijlpark, 1911
+                        </p>
+
+                        <div class="doc-footer">
+                            <strong>TIPFIN LOANS (PTY) LTD</strong> · NCR: NCRCP10123 · 20 Everest Street CE2, Vanderbijlpark, 1911 · info.tipfin@aol.com
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =====================================================
+                     PAGE 4 — REPAYMENT TERMS + DECLARATION + GOVERNING LAW
+                ===================================================== -->
+                <div class="document-page" id="page4">
+                    <div class="page-body">
+                        <!-- Header -->
+                        <div class="doc-page-header">
+                            <div class="doc-page-header-left">
+                                <img src="image/logo.png" alt="Logo" class="doc-header-logo-img"
+                                     onerror="this.style.display='none';">
+                                <div>
+                                    <div class="doc-header-company">TIPFIN</div>
+                                    <div class="doc-header-sub">LOANS (PTY) LTD · NCRCP10123</div>
+                                </div>
+                            </div>
+                            <div class="doc-page-header-right">
+                                Loan Approval &amp; Finalization Agreement<br>
+                                Date: <span id="hdrDate4">—</span>
+                            </div>
+                        </div>
+
+                        <!-- Repayment Terms (text only — table is on page 2) -->
+                        <div class="doc-section-heading">Repayment Terms</div>
+                        <p class="doc-para">
+                            The borrower shall repay the loan in equal monthly instalments of <strong id="p4Monthly">—</strong>, commencing <strong>one (1) month</strong> after the loan amount has been disbursed. Payments must be made consistently as per schedule.
+                        </p>
+                        <p class="doc-para">
+                            <strong>Grace Consideration:</strong> In the event of financial difficulty, TIPFIN Loans may, at its discretion, allow a grace period of up to <strong>3 months</strong>, depending on circumstances.
+                        </p>
+
+                        <!-- Borrower Declaration -->
+                        <div class="doc-section-heading">Borrower's Declaration</div>
+                        <p class="doc-para">I, <strong id="p4ClientName">the Borrower</strong>, confirm that:</p>
+                        <ul class="doc-list">
+                            <li>All information provided is true and accurate</li>
+                            <li>I understand and accept the terms of this agreement</li>
+                            <li>I acknowledge the activation fee requirement and repayment obligations</li>
+                        </ul>
+                        <p class="doc-para">
+                            Any false information may result in cancellation of this agreement and recovery of funds.
+                        </p>
+
+                        <!-- Governing Law -->
+                        <div class="doc-section-heading">Governing Law</div>
+                        <p class="doc-para">
+                            This agreement is governed by the laws of the Republic of South Africa, including the <strong>National Credit Act (NCA)</strong>.
+                        </p>
+
+                        <!-- Final Step -->
+                        <div class="doc-section-heading">Final Step — Activation</div>
+                        <div class="notice-box">
+                            To proceed with your loan payout, complete the activation process by settling the refundable fee of <span class="fee-badge">R269.00</span>. Once confirmed, your funds will be processed and disbursed within 44 minutes.
+                        </div>
+
+                        <!-- Official Notice -->
+                        <div class="doc-section-heading">Official Notice</div>
+                        <p class="doc-para">
+                            TIPFIN Loans is a registered credit provider operating under NCR regulations. We are committed to responsible lending and assisting clients in accessing fair financial solutions.
+                        </p>
+
+                        <div class="doc-footer">
+                            <strong>TIPFIN LOANS (PTY) LTD</strong> · NCR: NCRCP10123 · 20 Everest Street CE2, Vanderbijlpark, 1911 · info.tipfin@aol.com
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =====================================================
+                     PAGE 5 — SIGNATURES
+                ===================================================== -->
+                <div class="document-page" id="page5">
+                    <div class="page-body">
+                        <!-- Header -->
+                        <div class="doc-page-header">
+                            <div class="doc-page-header-left">
+                                <img src="image/logo.png" alt="Logo" class="doc-header-logo-img"
+                                     onerror="this.style.display='none';">
+                                <div>
+                                    <div class="doc-header-company">TIPFIN</div>
+                                    <div class="doc-header-sub">LOANS (PTY) LTD · NCRCP10123</div>
+                                </div>
+                            </div>
+                            <div class="doc-page-header-right">
+                                Loan Approval &amp; Finalization Agreement<br>
+                                Date: <span id="hdrDate5">—</span>
+                            </div>
+                        </div>
+
+                        <div class="doc-section-heading">Signatures &amp; Authorisation</div>
+
+                        <p class="doc-para" style="margin-bottom:4px;"><strong>For and on behalf of TIPFIN LOANS (PTY) LTD:</strong></p>
+                        <p class="doc-para">Managing Director</p>
+
+                        <p class="doc-para" style="margin-top:16px;">
+                            I/We <input type="text" id="applicantNameInput"
+                                style="border:none;border-bottom:1.5px solid #555;padding:3px 5px;font-family:'Times New Roman',Times,serif;font-size:11pt;min-width:200px;max-width:260px;background:transparent;"
+                                placeholder="Enter full name here">
+                            hereby declare that all information provided is, to the best of my/our knowledge, true, complete, and accurate, and I accept the terms and conditions of this agreement.
+                        </p>
+
+                        <!-- Signature blocks -->
+                        <div class="sig-area">
+                            <!-- MD Signature -->
+                            <div class="sig-block">
+                                <div class="sig-image-wrap">
+                                    <!-- Replace src with your MD signature URL -->
+                                    <img src="image/signature.png" alt="MD Signature" class="sig-img"
+                                         onerror="this.style.display='none';">
+                                </div>
+                                <div class="sig-label">Authorised Signature</div>
+                                <div class="sig-name"><strong>Sipho Thabethe</strong></div>
+                                <div class="sig-name">Managing Director, TIPFIN Loans</div>
+                            </div>
+
+                            <!-- Borrower -->
+                            <div class="sig-block">
+                                <div class="sig-image-wrap" style="align-items:center;justify-content:center;">
+                                    <div class="approved-stamp">APPROVED</div>
+                                </div>
+                                <div class="sig-label">Borrower Signature</div>
+                                <div class="sig-name" id="sigName">—</div>
+                                <div class="sig-name" id="sigId" style="font-size:9.5pt;">—</div>
+                            </div>
+                        </div>
+
+                        <!-- Official Seal -->
+                        <div class="seal-area">
+                            <!-- Replace src with your seal URL -->
+                            <img src="image/seal.png" alt="Official Seal" class="seal-img"
+                                 onerror="this.style.opacity='0';">
+                            <div style="font-family:Arial,sans-serif;font-size:8.5pt;color:#888;margin-top:4px;">
+                                OFFICIAL SEAL — TIPFIN LOANS (PTY) LTD
+                            </div>
+                        </div>
+
+                        <div class="doc-footer" style="margin-top:16px;">
+                            <strong>TIPFIN LOANS (PTY) LTD — REGISTERED CREDIT PROVIDER</strong><br>
+                            NCR Registration No.: NCRCP10123 &nbsp;·&nbsp; Company Reg: 2015/024567/07<br>
+                            20 Everest Street CE2, Vanderbijlpark, 1911 &nbsp;·&nbsp; info.tipfin@aol.com &nbsp;·&nbsp; +27 68 529 9179<br>
+                            <strong>DATE: <span id="footerDate">—</span></strong>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /pdf-content -->
+        </div><!-- /pdf-content-wrapper -->
+
+        <div class="zoom-controls">
+            <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+            <div class="zoom-level" id="zoomLevel">100%</div>
+            <button class="zoom-btn" onclick="zoomIn()" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     JAVASCRIPT
+================================================================ -->
+<script>
+    /* ---- CONFIG ---- */
+    const BASEROW_API_KEY = 'LG6hnTBxgBG78FueElsSwpHRd4Wep1oL';
+    const TABLE_ID        = '936442';
+    const EMAIL_FIELD     = 'field_8136510';
+
+    const F = {
+        name:       'field_8136507',
+        lastname:   'field_8136508',
+        loanAmount: 'field_8136509',
+        email:      'field_8136510',
+        phone:      'field_8136511',
+        loanTerm:   'field_8136518',
+        idNo:       'field_8136519',
+        address:    'field_8136521'
+    };
+
+    let currentZoom = 1;
+
+    /* ---- UTILS ---- */
+    function fmt(n) {
+        const v = parseFloat(n) || 0;
+        return 'R' + v.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function fmtDate(d) {
+        const dt = d ? new Date(d) : new Date();
+        return dt.toLocaleDateString('en-ZA', { day: '2-digit', month: 'long', year: 'numeric' });
+    }
+    function calcMonthly(amount, months) {
+        const a = parseFloat(amount) || 0;
+        const m = parseInt(months)   || 1;
+        return (a * 1.05) / m;
+    }
+    function set(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+    function setLoad(show) { document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none'; }
+    function showErr(msg) {
+        const el = document.getElementById('errorMessage');
+        el.textContent = msg; el.style.display = 'block';
+    }
+
+    /* ---- BASEROW ---- */
+    async function fetchRows(email) {
+        const url = `https://api.baserow.io/api/database/rows/table/${TABLE_ID}/`
+                  + `?filter__${EMAIL_FIELD}__contains=${encodeURIComponent(email.trim())}&size=50`;
+        const res = await fetch(url, { headers: { 'Authorization': `Token ${BASEROW_API_KEY}` } });
+        if (!res.ok) throw new Error(`API ${res.status}`);
+        const data = await res.json();
+        return (data.results || []).filter(r =>
+            (r[F.email] || '').toString().toLowerCase().includes(email.trim().toLowerCase())
+        );
+    }
+
+    function parseRow(row) {
+        const fn = (row[F.name]     || '').toString().trim();
+        const ln = (row[F.lastname] || '').toString().trim();
+        const full = [fn, ln].filter(Boolean).join(' ') || 'Unknown Applicant';
+        const amt  = parseFloat((row[F.loanAmount] || '0').toString().replace(/[^0-9.]/g,'')) || 0;
+        const term = parseInt((row[F.loanTerm]     || '12').toString()) || 12;
+        return {
+            id: row.id, fullName: full, firstName: fn || full.split(' ')[0],
+            email:   (row[F.email]   || '').toString().trim(),
+            phone:   (row[F.phone]   || '').toString().trim(),
+            idNo:    (row[F.idNo]    || '').toString().trim(),
+            address: (row[F.address] || '').toString().trim(),
+            loanAmount: amt, loanTerm: term, monthly: calcMonthly(amt, term)
+        };
+    }
+
+    /* ---- POPULATE ---- */
+    function populate(d) {
+        const today   = fmtDate();
+        const amtFmt  = fmt(d.loanAmount);
+        const monFmt  = fmt(d.monthly);
+        const termStr = `${d.loanTerm} Month${d.loanTerm !== 1 ? 's' : ''}`;
+
+        /* Cover */
+        set('approvalDate',   today);
+        set('coverClientName', d.fullName);
+        set('coverIdNo',      d.idNo    || '—');
+        set('coverEmail',     d.email   || '—');
+        set('coverPhone',     d.phone   || '—');
+        set('coverAddress',   d.address || '—');
+
+        /* Page 2 */
+        ['hdrDate2','hdrDate3','hdrDate4','hdrDate5','footerDate'].forEach(id => set(id, today));
+        set('p2ClientName', d.fullName);
+        set('p2FirstName',  d.firstName);
+        set('tdAmount',     amtFmt);
+        set('tdTerm',       termStr);
+        set('tdMonthly',    monFmt);
+
+        /* Page 3 */
+        set('p3Amount', amtFmt);
+
+        /* Page 4 */
+        set('p4Monthly',    monFmt);
+        set('p4ClientName', d.fullName);
+
+        /* Page 5 */
+        set('sigName', d.fullName);
+        set('sigId',   d.idNo ? `ID: ${d.idNo}` : '');
+        const ni = document.getElementById('applicantNameInput');
+        if (ni) ni.value = d.fullName;
+
+        window._tData = d;
+    }
+
+    /* ---- ROW SELECTION ---- */
+    function showRowPicker(rows) {
+        const c = document.getElementById('rowCardContainer');
+        c.innerHTML = '';
+        rows.forEach(row => {
+            const d = parseRow(row);
+            const card = document.createElement('div');
+            card.className = 'row-card';
+            card.innerHTML = `
+                <div class="row-card-name">${d.fullName}</div>
+                <div class="row-card-detail">ID: ${d.idNo || '—'} &nbsp;·&nbsp; ${d.email || '—'}</div>
+                <div class="row-card-detail">Loan: ${fmt(d.loanAmount)} &nbsp;·&nbsp; ${d.loanTerm} months</div>`;
+            card.onclick = () => {
+                document.getElementById('rowSelectModal').style.display = 'none';
+                populate(d);
+                document.getElementById('verificationModal').style.display = 'none';
+                document.getElementById('documentModal').style.display = 'flex';
+            };
+            c.appendChild(card);
+        });
+        document.getElementById('rowSelectModal').style.display = 'flex';
+    }
+
+    /* ---- FORM SUBMIT ---- */
+    document.getElementById('verificationForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        document.getElementById('errorMessage').style.display = 'none';
+        const email = document.getElementById('userEmail').value.trim();
+        const btn = document.getElementById('verifyBtn');
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying…';
+        btn.disabled = true;
+        try {
+            setLoad(true);
+            const rows = await fetchRows(email);
+            if (!rows.length) {
+                showErr('No application found for this email. Please check and try again.');
+                return;
+            }
+            if (rows.length === 1) {
+                populate(parseRow(rows[0]));
+                document.getElementById('verificationModal').style.display = 'none';
+                document.getElementById('documentModal').style.display = 'flex';
+            } else {
+                setLoad(false);
+                showRowPicker(rows);
+            }
+        } catch (err) {
+            showErr('Connection error. Please check your internet and try again.');
+        } finally {
+            setLoad(false);
+            btn.innerHTML = orig;
+            btn.disabled  = false;
+        }
+    });
+
+    /* ---- CLOSE / ZOOM ---- */
+    function closeDocument() {
+        if (confirm('Close this agreement?')) {
+            document.getElementById('documentModal').style.display = 'none';
+            document.getElementById('verificationModal').style.display = 'flex';
+        }
+    }
+    function zoomIn()  { if (currentZoom < 2.0) { currentZoom = Math.round((currentZoom+0.1)*10)/10; applyZoom(); } }
+    function zoomOut() { if (currentZoom > 0.4) { currentZoom = Math.round((currentZoom-0.1)*10)/10; applyZoom(); } }
+    function applyZoom() {
+        document.querySelectorAll('.document-page').forEach(p => p.style.transform = `scale(${currentZoom})`);
+        document.getElementById('zoomLevel').textContent = `${Math.round(currentZoom*100)}%`;
+    }
+
+    /* ---- LIVE NAME UPDATE ---- */
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('applicantNameInput').addEventListener('input', function() {
+            set('sigName', this.value || '—');
+        });
+    });
+
+    /* ---- PDF DOWNLOAD ---- */
+    async function downloadPDF() {
+        const msgEl = document.querySelector('.loading-text');
+        msgEl.textContent = 'Generating PDF…';
+        setLoad(true);
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p','mm','a4');
+        const saved = currentZoom;
+        currentZoom = 1; applyZoom();
+
+        const pages = document.querySelectorAll('.document-page');
+        for (let i = 0; i < pages.length; i++) {
+            if (i > 0) pdf.addPage();
+            const canvas = await html2canvas(pages[i], {
+                scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#fff'
+            });
+            const imgH = (canvas.height * 210) / canvas.width;
+            pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, 210, imgH, '', 'FAST');
+        }
+
+        currentZoom = saved; applyZoom();
+        const name = (window._tData?.fullName || 'Applicant').replace(/\s+/g,'_');
+        pdf.save(`TIPFIN_Agreement_${name}.pdf`);
+
+        msgEl.textContent = 'Retrieving your loan details…';
+        setLoad(false);
+    }
+</script>
+</body>
+</html>

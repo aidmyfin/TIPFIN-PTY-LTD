@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Apply for a loan — TIPFIN</title>
+<link rel="icon" type="image/png" href="logo.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="container row">
+      <a class="brand" href="index.html">
+        <img src="logo.png" alt="TipFin"/>
+        <div>
+          <div class="name">TIPFIN</div>
+          <div class="tag">Smart Lending</div>
+        </div>
+      </a>
+      <nav class="nav-desktop">
+        <a data-nav="index.html" href="index.html">Home</a>
+        <a data-nav="loans.html" href="loans.html">Loans</a>
+        <a data-nav="about.html" href="about.html">About</a>
+        <a data-nav="reviews.html" href="reviews.html">Reviews</a>
+        <a data-nav="contact.html" href="contact.html">Contact</a>
+      </nav>
+      <div class="header-cta">
+        <span data-online-users></span>
+        <span data-auth-cta></span>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="header-mobile-online"><span data-online-users></span></div>
+    <div class="mobile-menu" id="mobile-menu" hidden>
+      <a data-nav="index.html" href="index.html">🏠 Home</a>
+      <a data-nav="loans.html" href="loans.html">💰 Loan Products</a>
+      <a data-nav="apply.html" href="apply.html">📝 Apply</a>
+      <a data-nav="dashboard.html" href="dashboard.html">📊 Dashboard</a>
+      <a data-nav="about.html" href="about.html">ℹ️ About</a>
+      <a data-nav="reviews.html" href="reviews.html">⭐ Reviews</a>
+      <a data-nav="faq.html" href="faq.html">❓ FAQ</a>
+      <a data-nav="download.html" href="download.html">📱 Download App</a>
+      <a data-nav="contact.html" href="contact.html">📞 Contact</a>
+      <a data-nav="profile.html" href="profile.html">👤 My Profile</a>
+      <div class="mm-cta" data-auth-cta-mobile></div>
+      <div class="mm-contact">
+        <div><strong>📍 Address</strong><br/>20 Everest Street CE2, VANDERBIJLPARK 1911</div>
+        <div style="margin-top:8px"><strong>📞</strong> <a href="tel:+27685299179">+27 68 529 9179</a></div>
+        <div><strong>✉️</strong> <a href="mailto:info.tipfin@aol.com">info.tipfin@aol.com</a></div>
+      </div>
+    </div>
+  </header>
+
+<section class="page-hero">
+  <div class="container reveal">
+    <div class="crumbs"><a href="index.html">Home</a> · Apply</div>
+    <h1>Apply for your loan today</h1>
+    <p>Complete the secure online application — fast, encrypted and trackable from your dashboard.</p>
+  </div>
+</section>
+
+<section style="padding-top:10px">
+  <div class="container">
+    <div class="grid cols-2" style="gap:30px;align-items:start">
+      <form id="apply-form" class="card reveal" style="padding:28px" novalidate>
+
+        <h2 style="margin-bottom:6px">Loan application</h2>
+        <p>All fields marked * are required. Your data is encrypted and securely stored.</p>
+        <div id="apply-msg"></div>
+
+        <h3 style="margin-top:20px">Loan details</h3>
+        <div class="field"><label>Country of Residence *</label>
+          <select required name="country" id="f-country"></select>
+        </div>
+
+        <div class="field"><label>Loan Amount * <span class="muted small" id="f-currency-label"></span></label>
+          <div class="with-prefix">
+            <span class="pre" id="f-curr-pre">$</span>
+            <input required type="number" name="loanAmount" id="f-amount" min="500" step="100" value="8000"/>
+          </div>
+          <span class="hint" id="f-amount-hint">Enter the amount you'd like to borrow.</span>
+        </div>
+
+        <div class="field"><label>Loan Type *</label>
+          <div class="chip-grid" id="f-loan-types">
+            <label class="chip"><input type="radio" name="loanType" value="Personal Loan" hidden required/><span class="emo">👤</span>Personal</label>
+            <label class="chip"><input type="radio" name="loanType" value="Business Loan" hidden/><span class="emo">💼</span>Business</label>
+            <label class="chip"><input type="radio" name="loanType" value="Home Loan" hidden/><span class="emo">🏠</span>Home</label>
+            <label class="chip"><input type="radio" name="loanType" value="Consolidation" hidden/><span class="emo">💰</span>Consolidation</label>
+            <label class="chip"><input type="radio" name="loanType" value="Medical Loan" hidden/><span class="emo">🏥</span>Medical</label>
+            <label class="chip"><input type="radio" name="loanType" value="Education Loan" hidden/><span class="emo">🎓</span>Education</label>
+            <label class="chip"><input type="radio" name="loanType" value="Vehicle Loan" hidden/><span class="emo">🚗</span>Vehicle</label>
+            <label class="chip"><input type="radio" name="loanType" value="Emergency Loan" hidden/><span class="emo">⚡</span>Emergency</label>
+            <label class="chip"><input type="radio" name="loanType" value="Wedding Loan" hidden/><span class="emo">💍</span>Wedding</label>
+            <label class="chip"><input type="radio" name="loanType" value="Other" hidden/><span class="emo">📝</span>Other</label>
+          </div>
+        </div>
+
+        <div class="grid cols-2" style="gap:12px">
+          <div class="field"><label>Loan Purpose *</label>
+            <select required name="loanPurpose">
+              <option value="">Select Purpose</option>
+              <option>Home renovation</option><option>Business expansion</option>
+              <option>Vehicle purchase</option><option>Medical expenses</option>
+              <option>Education</option><option>Debt consolidation</option>
+              <option>Wedding</option><option>Emergency</option>
+              <option>Travel</option><option>Other</option>
+            </select></div>
+          <div class="field"><label>Repayment Term *</label>
+            <select required name="loanTearm">
+              <option value="">Select Term</option>
+              <option>3 months</option><option>6 months</option><option>12 months</option>
+              <option>18 months</option><option>24 months</option><option>36 months</option>
+              <option>48 months</option><option>60 months</option>
+            </select></div>
+        </div>
+
+        <h3 style="margin-top:20px">Personal information</h3>
+        <div class="grid cols-2" style="gap:12px">
+          <div class="field"><label>First Name *</label><input required name="name" id="f-name" placeholder="Enter your first name"/></div>
+          <div class="field"><label>Last Name *</label><input required name="lastname" id="f-lastname" placeholder="Enter your last name"/></div>
+        </div>
+        <div class="field"><label>Passport or National ID Number *</label>
+          <input required name="idno" id="f-idno" placeholder="e.g., A12345678 or 123456789"/>
+          <span class="hint">Enter your passport or government ID number.</span>
+        </div>
+        <div class="grid cols-2" style="gap:12px">
+          <div class="field"><label>Email Address *</label><input required type="email" name="email" id="f-email" placeholder="name@example.com"/></div>
+          <div class="field"><label>Phone Number *</label>
+            <input required type="tel" name="phone" id="f-phone" placeholder="+1 234 567 8900"/>
+            <span class="hint">Include country code.</span></div>
+        </div>
+
+        <h3 style="margin-top:20px">Employment & income</h3>
+        <div class="field"><label>Employment Status *</label>
+          <select required name="employ" id="f-employ">
+            <option value="">Select Status</option>
+            <option>Employed (Full-time)</option>
+            <option>Employed (Part-time)</option>
+            <option>Self-employed</option>
+            <option>Business owner</option>
+            <option>Contract / Freelance</option>
+            <option>Pensioner</option>
+            <option>Student</option>
+            <option>Unemployed</option>
+          </select>
+        </div>
+        <div id="income-section">
+          <div class="grid cols-2" style="gap:12px">
+            <div class="field"><label>Monthly Income (After Tax) *</label>
+              <div class="with-prefix">
+                <span class="pre f-curr-pre2">$</span>
+                <input type="number" name="income" id="f-income" placeholder="e.g., 5000" min="0" step="100"/>
+              </div>
+              <span class="hint">Your total monthly income after deductions.</span></div>
+            <div class="field"><label>Monthly Expenses *</label>
+              <div class="with-prefix">
+                <span class="pre f-curr-pre2">$</span>
+                <input type="number" name="expenses" id="f-expenses" placeholder="e.g., 2500" min="0" step="100"/>
+              </div>
+              <span class="hint">Include rent, food, transport, etc.</span></div>
+          </div>
+        </div>
+        <div id="unemployed-note" class="callout warn" style="display:none">
+          You've selected <strong>Unemployed</strong>. No monthly income or repayment installment is required.
+          We'll evaluate your application based on the documents you upload.
+        </div>
+
+        <h3 style="margin-top:20px">Document upload</h3>
+        <div class="field"><label>ID Document *</label>
+          <label class="drop" id="drop-id">
+            <span class="ic">📄</span>
+            <div class="t">Click to upload or drag & drop</div>
+            <div class="h">Any document or image file (PDF, JPG, PNG, etc.)</div>
+            <input type="file" id="file-id" accept="image/*,application/pdf,.doc,.docx" required/>
+            <div class="file-info" style="display:none"></div>
+            <div class="progress-mini" style="display:none"><span></span></div>
+          </label>
+          <span class="hint">Upload your Passport or National ID.</span>
+        </div>
+
+        <div class="field"><label>Bank Statement / Payslip / Proof of Income *</label>
+          <label class="drop" id="drop-bank">
+            <span class="ic">📄</span>
+            <div class="t">Click to upload or drag & drop</div>
+            <div class="h">Any document or image file — even large ones</div>
+            <input type="file" id="file-bank" accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx" required/>
+            <div class="file-info" style="display:none"></div>
+            <div class="progress-mini" style="display:none"><span></span></div>
+          </label>
+          <span class="hint">Upload Bank Statement, Payslip, or Proof of Income (last 3 months).</span>
+        </div>
+
+        <h3 style="margin-top:20px">Terms & conditions</h3>
+        <div class="terms">
+          <label><input type="checkbox" required name="t1"/> I agree to the <a href="contact.html" style="color:var(--brand);font-weight:700">Terms and Conditions</a> and <a href="contact.html" style="color:var(--brand);font-weight:700">Privacy Policy</a>. *</label>
+          <label><input type="checkbox" required name="t2"/> I confirm that all information provided is accurate and complete. *</label>
+          <label><input type="checkbox" required name="t3"/> I consent to a credit check (where applicable by law). *</label>
+        </div>
+
+        <div class="callout info" style="margin-top:12px">By submitting, you agree to TIPFIN's terms. Approval does not guarantee payout — final disbursement is completed by TIPFIN (PTY) LTD.</div>
+
+        <button class="btn btn-primary btn-block" type="submit" id="apply-btn" style="margin-top:8px">
+          <span id="apply-btn-text">Submit application</span>
+        </button>
+      </form>
+
+      <aside class="reveal">
+        <div class="card" style="margin-bottom:14px">
+          <h3>What you'll need</h3>
+          <ul style="color:var(--ink-soft);line-height:1.9;margin:8px 0 0 18px">
+            <li>Valid ID document or passport</li>
+            <li>Proof of income (bank statement / payslip)</li>
+            <li>Employment & income details</li>
+            <li>Loan amount, term and purpose</li>
+          </ul>
+        </div>
+        <div class="card" style="margin-bottom:14px">
+          <h3>Estimated repayment</h3>
+          <p>Based on what you enter on the left.</p>
+          <div class="kpis" style="grid-template-columns:1fr 1fr;gap:10px;margin-top:6px">
+            <div class="kpi"><div class="lbl">Total repayable</div><div class="num" id="est-total">—</div></div>
+            <div class="kpi"><div class="lbl">Monthly</div><div class="num" id="est-monthly">—</div></div>
+          </div>
+          <p class="small muted" style="margin-top:8px">Fixed 5% interest: 5% of the loan amount is added to the principal, then divided across your term. (e.g. R10,000 over 12 months → 5% of 10,000 = 500, total R10,500 ÷ 12 = R875.00 per month).</p>
+        </div>
+        <div class="feature-img" style="margin-bottom:14px">
+          <img src="https://images.unsplash.com/photo-1512486130939-2c4f79935e4f?auto=format&fit=crop&w=1200&q=70" alt=""/>
+        </div>
+        <div class="card">
+          <h3>How processing works</h3>
+          <ol style="color:var(--ink-soft);line-height:1.9;margin:8px 0 0 18px">
+            <li>Your data & files are encrypted and stored.</li>
+            <li>An automated evaluation is run.</li>
+            <li>Status tracking goes live immediately.</li>
+            <li>After approval, contact TIPFIN to receive funds.</li>
+          </ol>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="grid">
+        <div>
+          <a class="brand" style="color:#fff" href="index.html">
+            <img src="logo.png" alt="TipFin"/>
+            <div>
+              <div class="name">TIPFIN (PTY) LTD</div>
+              <div class="tag" style="color:#9aa6b6">Smart Lending</div>
+            </div>
+          </a>
+          <p style="color:#9aa6b6;margin-top:14px;max-width:380px">
+            Next-generation digital lending. Apply online, upload documents, track every step
+            from your secure dashboard.
+          </p>
+          <p style="color:#9aa6b6;margin-top:6px;font-size:.85rem">
+            NCR Reg No: <strong style="color:#fff">NCRCP22024</strong><br/>
+            Legal Reg No: <strong style="color:#fff">2024/669652/07</strong><br/>
+            <strong style="color:#fff">Address:</strong> 20 Everest Street CE2, VANDERBIJLPARK 1911<br/>
+            <strong style="color:#fff">Town:</strong> VANDERBIJLPARK<br/>
+            Email: <a href="mailto:info.tipfin@aol.com">info.tipfin@aol.com</a><br/>
+            Phone: <a href="tel:+27685299179">+27 68 529 9179</a><br/>
+            WhatsApp: <a href="https://wa.me/27685299179" target="_blank" rel="noopener">+27 68 529 9179</a>
+          </p>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <a href="index.html">Home</a>
+          <a href="apply.html">Apply</a>
+          <a href="about.html">About</a>
+          <a href="loans.html">Loan Types</a>
+          <a href="download.html">Download App</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div>
+          <h4>Loan Products</h4>
+          <a href="loans.html">Personal Loans</a>
+          <a href="loans.html">Business Loans</a>
+          <a href="loans.html">Vehicle Loans</a>
+          <a href="loans.html">Debt Consolidation</a>
+          <a href="loans.html">Education Loans</a>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <a href="faq.html">FAQs</a>
+          <a href="contact.html">Privacy Policy</a>
+          <a href="contact.html">Terms of Service</a>
+          <a href="contact.html">PAIA Manual</a>
+          <a href="contact.html">Complaints</a>
+        </div>
+      </div>
+      <div class="legal">
+        <div>© <span data-year></span> TIPFIN (PTY) LTD. All rights reserved.</div>
+        <div>Application & approval are automated. Final payout completed via TIPFIN (PTY) LTD.</div>
+      </div>
+    </div>
+  </footer>
+
+  <nav class="mobile-tabs" aria-label="Mobile navigation">
+    <a data-nav="index.html" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg>
+      Home
+    </a>
+    <a data-nav="loans.html" href="loans.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>
+      Loans
+    </a>
+    <a data-nav="apply.html" href="apply.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+      Apply
+    </a>
+    <a data-nav="dashboard.html" href="dashboard.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="9" rx="1"/><rect x="13" y="3" width="8" height="5" rx="1"/><rect x="13" y="10" width="8" height="11" rx="1"/><rect x="3" y="14" width="8" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a data-nav="download.html" href="download.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg>
+      Get App
+    </a>
+  </nav>
+
+  <a class="wa-float" href="https://wa.me/27685299179?text=Hi%20TipFin%2C%20I%20need%20help%20with%20my%20loan." target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <span class="wa-pulse"></span>
+    <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+      <path d="M19.11 17.34c-.28-.14-1.66-.82-1.92-.91-.26-.1-.45-.14-.64.14-.19.28-.73.91-.9 1.1-.17.19-.33.21-.61.07-.28-.14-1.18-.43-2.25-1.39-.83-.74-1.39-1.66-1.55-1.94-.16-.28-.02-.43.12-.57.13-.13.28-.33.42-.5.14-.17.19-.28.28-.47.09-.19.05-.35-.02-.5-.07-.14-.64-1.55-.88-2.13-.23-.55-.46-.48-.64-.48l-.55-.01c-.19 0-.5.07-.76.35-.26.28-1 .98-1 2.39s1.02 2.77 1.16 2.96c.14.19 2.02 3.08 4.9 4.32.69.3 1.22.48 1.64.61.69.22 1.32.19 1.81.12.55-.08 1.66-.68 1.9-1.34.23-.65.23-1.21.16-1.34-.07-.13-.26-.21-.54-.35z"/>
+      <path d="M27.31 4.69C24.27 1.65 20.23 0 16 0 7.18 0 0 7.18 0 16c0 2.81.74 5.55 2.13 7.97L0 32l8.23-2.16C10.57 31.27 13.24 32 16 32c8.82 0 16-7.18 16-16 0-4.23-1.65-8.27-4.69-11.31zM16 29.34c-2.49 0-4.93-.67-7.05-1.94l-.5-.3-4.89 1.28 1.31-4.76-.33-.51A13.32 13.32 0 0 1 2.66 16C2.66 8.65 8.65 2.66 16 2.66c3.56 0 6.91 1.39 9.43 3.91A13.27 13.27 0 0 1 29.34 16c0 7.35-5.99 13.34-13.34 13.34z"/>
+    </svg>
+    <span class="wa-tip">Chat with us on WhatsApp</span>
+  </a>
+<script src="_partials.js"></script>
+<script src="app.js"></script>
+<script>
+const u = TIPFIN_SESSION.requireAuth("register.html");
+
+// Country dropdown
+const countrySel = document.getElementById("f-country");
+countrySel.innerHTML = TIPFIN_COUNTRY.countryOptionsHTML(u?.country || "");
+
+// Pre-fill known fields
+if (u){
+  document.getElementById("f-name").value = u.name || "";
+  document.getElementById("f-lastname").value = u.lastname || "";
+  document.getElementById("f-email").value = u.email || "";
+  document.getElementById("f-phone").value = u.phone || "";
+  document.getElementById("f-idno").value = u.idno || "";
+  if (u.loanAmount) document.getElementById("f-amount").value = u.loanAmount;
+  if (u.employ) document.getElementById("f-employ").value = u.employ;
+  if (u.income) document.getElementById("f-income").value = u.income;
+}
+
+// Loan-type chip selection
+document.querySelectorAll('#f-loan-types .chip').forEach(c=>{
+  const r = c.querySelector('input');
+  c.addEventListener('click', ()=>{
+    document.querySelectorAll('#f-loan-types .chip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active'); r.checked = true;
+    updateEstimate();
+  });
+});
+if (u?.loanType){
+  const m = document.querySelector(`#f-loan-types input[value="${u.loanType}"]`);
+  if (m){ m.checked = true; m.parentElement.classList.add('active'); }
+}
+
+// Estimate inputs (declared early so refreshCurrency/refreshEmployment can call updateEstimate)
+const amountInput = document.getElementById("f-amount");
+const termSel = document.querySelector("[name=loanTearm]");
+
+// Currency symbol updates
+function refreshCurrency(){
+  const country = countrySel.value;
+  const c = TIPFIN_COUNTRY.currencyFor(country);
+  document.getElementById("f-curr-pre").textContent = c.sym;
+  document.querySelectorAll(".f-curr-pre2").forEach(el=> el.textContent = c.sym);
+  document.getElementById("f-currency-label").textContent = country ? `(${c.code})` : "";
+  updateEstimate();
+}
+countrySel.addEventListener("change", refreshCurrency);
+refreshCurrency();
+
+// Employment-aware UI
+const employSel = document.getElementById("f-employ");
+const incomeSection = document.getElementById("income-section");
+const unempNote = document.getElementById("unemployed-note");
+const incomeInput = document.getElementById("f-income");
+const expensesInput = document.getElementById("f-expenses");
+function refreshEmployment(){
+  const v = employSel.value;
+  const skipIncome = (v === "Unemployed" || v === "Student");
+  incomeSection.style.display = skipIncome ? "none" : "";
+  if (skipIncome){
+    unempNote.innerHTML = "You've selected <strong>"+v+"</strong>. No monthly income or expense details are required. We'll evaluate your application based on the documents you upload.";
+    unempNote.style.display = "";
+  } else {
+    unempNote.style.display = "none";
+  }
+  incomeInput.required = !skipIncome;
+  expensesInput.required = !skipIncome;
+  if (skipIncome){ incomeInput.value = ""; expensesInput.value = ""; }
+  updateEstimate();
+}
+employSel.addEventListener("change", refreshEmployment);
+refreshEmployment();
+
+// Estimate calculator
+function updateEstimate(){
+  const amt = parseFloat(amountInput.value)||0;
+  const termRaw = (termSel.value||"").match(/\d+/);
+  const term = termRaw ? parseInt(termRaw[0]) : 0;
+  const country = countrySel.value;
+  if (!amt || !term){
+    document.getElementById("est-total").textContent = "—";
+    document.getElementById("est-monthly").textContent = "—";
+    return;
+  }
+  const total = TIPFIN_COUNTRY.calcTotal(amt);
+  const monthly = TIPFIN_COUNTRY.calcMonthly(amt, term);
+  document.getElementById("est-total").textContent = TIPFIN_COUNTRY.fmtMoney(total, country);
+  document.getElementById("est-monthly").textContent = TIPFIN_COUNTRY.fmtMonthly(monthly, country);
+}
+amountInput.addEventListener("input", updateEstimate);
+termSel.addEventListener("change", updateEstimate);
+
+/* ---------- File drop helpers ---------- */
+function setupDrop(dropId, fileId){
+  const drop = document.getElementById(dropId);
+  const input = document.getElementById(fileId);
+  const info = drop.querySelector(".file-info");
+  const prog = drop.querySelector(".progress-mini");
+  const bar  = prog.querySelector("span");
+
+  ;["dragenter","dragover"].forEach(ev=> drop.addEventListener(ev, e=>{ e.preventDefault(); drop.classList.add("over"); }));
+  ;["dragleave","drop"].forEach(ev=> drop.addEventListener(ev, e=>{ e.preventDefault(); drop.classList.remove("over"); }));
+  drop.addEventListener("drop", e=>{
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]){
+      input.files = e.dataTransfer.files;
+      input.dispatchEvent(new Event("change"));
+    }
+  });
+  input.addEventListener("change", ()=>{
+    if (!input.files || !input.files[0]) return;
+    const f = input.files[0];
+    const sizeMb = (f.size/1024/1024).toFixed(2);
+    drop.classList.add("has-file");
+    info.style.display = "block";
+    info.textContent = "Selected: " + f.name + "  ·  " + sizeMb + " MB";
+  });
+  return { input, drop, info, prog, bar };
+}
+const idDrop   = setupDrop("drop-id",   "file-id");
+const bankDrop = setupDrop("drop-bank", "file-bank");
+
+/* ---------- Submit ---------- */
+const form = document.getElementById("apply-form");
+const msg = document.getElementById("apply-msg");
+const btn = document.getElementById("apply-btn");
+const btnText = document.getElementById("apply-btn-text");
+
+async function uploadWithProgress(slot, file){
+  slot.prog.style.display = "block";
+  slot.bar.style.width = "0%";
+  return TIPFIN_API.uploadFileToBaserow(file, pct => { slot.bar.style.width = pct + "%"; });
+}
+
+form.addEventListener("submit", async (e)=>{
+  e.preventDefault();
+  msg.innerHTML = "";
+
+  if (!form.querySelector('input[name="loanType"]:checked')){
+    msg.innerHTML = '<div class="callout err">Please select a loan type.</div>';
+    return;
+  }
+  if (!idDrop.input.files[0] || !bankDrop.input.files[0]){
+    msg.innerHTML = '<div class="callout err">Please upload your ID document and proof of income.</div>';
+    return;
+  }
+
+  btn.disabled = true;
+  btnText.innerHTML = '<span class="spinner"></span> Uploading documents...';
+
+  try {
+    const idFile   = idDrop.input.files[0];
+    const bankFile = bankDrop.input.files[0];
+    const [idUploaded, bankUploaded] = await Promise.all([
+      uploadWithProgress(idDrop, idFile),
+      uploadWithProgress(bankDrop, bankFile),
+    ]);
+
+    btnText.innerHTML = '<span class="spinner"></span> Submitting application...';
+
+    const fd = new FormData(form);
+    const reference = Math.floor(100000 + Math.random()*900000);
+    const country = String(fd.get("country"));
+    const employ = String(fd.get("employ"));
+    const skipIncome = (employ === "Unemployed" || employ === "Student");
+
+    // Baserow table 936442 — write using explicit field IDs so nothing is
+    // lost to field-name casing/aliasing.
+    const F = TIPFIN_API.FIELDS;
+    const payload = {
+      [F.name]:        String(fd.get("name")||""),
+      [F.lastname]:    String(fd.get("lastname")||""),
+      [F.loanAmount]:  String(fd.get("loanAmount")||""),
+      [F.Email]:       String(fd.get("email")||"").trim().toLowerCase(),
+      [F.Phonenumber]: parseInt(String(fd.get("phone")).replace(/\D/g,"")) || 0,
+      [F.IdDoc]:       [idUploaded],
+      [F.Bankstate]:   [bankUploaded],
+      [F.employ]:      employ,
+      [F.income]:      skipIncome ? "0" : String(fd.get("income")||""),
+      [F.loanType]:    String(fd.get("loanType")||""),
+      [F.loanPurpose]: String(fd.get("loanPurpose")||""),
+      [F.loanTearm]:   String(fd.get("loanTearm")||""),
+      [F.idNo]:        String(fd.get("idno")||""),
+      [F.reference]:   reference,
+      [F.cashcode]:    country,
+      [F.payproof]:    skipIncome ? "0" : String(fd.get("expenses")||"0"),
+    };
+
+    const session = TIPFIN_SESSION.get();
+    // Always create a new row on apply, even if the email already exists.
+    const row = await TIPFIN_API.createUserRowById(payload);
+
+    const updated = {
+      ...session,
+      rowId: row.id,
+      email: payload[F.Email],
+      name: payload[F.name],
+      lastname: payload[F.lastname],
+      idno: payload[F.idNo],
+      phone: payload[F.Phonenumber],
+      country,
+      hasApplied: true,
+      loanAmount: payload[F.loanAmount],
+      loanType: payload[F.loanType],
+      loanTearm: payload[F.loanTearm],
+      loanPurpose: payload[F.loanPurpose],
+      employ: payload[F.employ],
+      income: payload[F.income],
+      expenses: fd.get("expenses") || "",
+      reference,
+      idDocName: idUploaded.name,
+      idDocUrl: idUploaded.url,
+      bankDocName: bankUploaded.name,
+      bankDocUrl: bankUploaded.url,
+      appliedAt: Date.now(),
+      firstLoginAt: session?.firstLoginAt || Date.now(),
+      lastLoginAt: Date.now()
+    };
+    TIPFIN_SESSION.set(updated);
+
+    msg.innerHTML = '<div class="callout ok">Application submitted! Reference <strong>#'+reference+'</strong>. Redirecting...</div>';
+    setTimeout(()=> location.href = "thank-you.html?ref=" + reference, 1100);
+  } catch (err) {
+    console.error(err);
+    msg.innerHTML = '<div class="callout err">Submission failed: '+err.message+'</div>';
+    btn.disabled = false; btnText.textContent = "Submit application";
+  }
+});
+</script>
+</body>
+</html>

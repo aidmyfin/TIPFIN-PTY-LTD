@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Download the TIPFIN App</title>
+<meta name="description" content="Get the TIPFIN app on your phone — apply for loans, upload documents, and track your application from your home screen. Available for iPhone (Add to Home Screen) and Android (APK download)."/>
+<link rel="icon" type="image/png" href="logo.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"/>
+<style>
+  .dl-hero{background:linear-gradient(135deg,#fff7f6 0%,#fde8e6 100%);padding:48px 0 36px;position:relative;overflow:hidden}
+  .dl-hero h1{font-size:clamp(1.6rem,5vw,2.6rem);line-height:1.15;margin:10px 0}
+  .dl-hero .lead{color:var(--ink-soft);font-size:1.05rem;max-width:620px}
+  .dl-cta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .dl-platform{display:grid;grid-template-columns:1fr;gap:24px;padding:36px 0}
+  @media(min-width:900px){.dl-platform{grid-template-columns:1fr 1fr;gap:32px}}
+  .dl-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow-sm)}
+  .dl-icon{font-size:2.4rem;display:inline-block;background:#fde8e6;border-radius:18px;padding:10px 14px;line-height:1}
+  .dl-card h2{margin:14px 0 6px;font-size:1.3rem}
+  .dl-card .sub{color:var(--muted);font-size:.92rem}
+  .step-list{list-style:none;padding:0;margin:18px 0 0;counter-reset:step}
+  .step-list li{position:relative;padding:10px 0 10px 44px;border-top:1px solid var(--line);counter-increment:step}
+  .step-list li:first-child{border-top:0}
+  .step-list li::before{content:counter(step);position:absolute;left:0;top:14px;width:30px;height:30px;border-radius:50%;
+    background:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;
+    box-shadow:0 6px 16px -6px rgba(216,54,42,.55)}
+  .step-list li b{display:block;font-weight:700;margin-bottom:2px}
+  .step-list li span{color:var(--ink-soft);font-size:.9rem}
+  .pill-tag{display:inline-flex;align-items:center;gap:6px;background:#dff7e3;color:#0d8d3f;
+    border-radius:999px;padding:5px 12px;font-size:.78rem;font-weight:700;margin-bottom:8px}
+  .benefits{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:8px}
+  .benefits li{display:flex;align-items:start;gap:10px;font-size:.92rem;color:var(--ink-soft)}
+  .benefits li::before{content:"✓";color:#16a34a;font-weight:800;flex:none;width:22px;height:22px;
+    background:#dff7e3;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem}
+  .download-bar{background:#0f1620;color:#fff;border-radius:18px;padding:22px;display:flex;flex-wrap:wrap;
+    align-items:center;justify-content:space-between;gap:16px;margin-top:18px}
+  .download-bar h3{margin:0;color:#fff}
+  .download-bar .meta{color:#9aa6b6;font-size:.82rem;margin-top:4px}
+  .download-bar .btn-primary{background:linear-gradient(135deg,#16a34a,#0d8d3f)}
+  .why-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:24px}
+  @media(min-width:760px){.why-grid{grid-template-columns:repeat(3,1fr)}}
+  .why-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;text-align:center;box-shadow:var(--shadow-sm)}
+  .why-card .ic{font-size:1.8rem;margin-bottom:8px}
+  .why-card h4{margin:6px 0;font-size:1.05rem}
+  .why-card p{color:var(--muted);font-size:.9rem;margin:0}
+  .tips-card{background:#fff7e6;border:1px solid #fcd9a5;border-radius:14px;padding:18px;margin-top:18px}
+  .tips-card h4{margin:0 0 8px;color:#a8540b}
+  .tips-card ul{margin:0;padding-left:20px;color:#7a4a14;font-size:.9rem}
+  .tips-card li{margin:4px 0}
+  .phone-mock{display:flex;justify-content:center;align-items:center;margin-top:20px}
+  .phone-mock .pf{width:180px;height:340px;background:#0f1620;border-radius:30px;padding:10px;
+    box-shadow:0 30px 60px -20px rgba(15,22,32,.45);position:relative}
+  .phone-mock .pf::after{content:"";position:absolute;top:14px;left:50%;transform:translateX(-50%);
+    width:90px;height:18px;background:#0a0f15;border-radius:0 0 12px 12px;z-index:2}
+  .phone-mock .scr{width:100%;height:100%;border-radius:22px;overflow:hidden;
+    background:linear-gradient(180deg,var(--brand) 0%,#a82119 100%);color:#fff;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 16px}
+  .phone-mock .scr img{width:60px;height:60px;border-radius:14px;background:#fff;padding:6px;margin-bottom:14px}
+  .phone-mock .scr h5{margin:0;font-size:1.2rem;font-weight:800}
+  .phone-mock .scr p{font-size:.78rem;opacity:.85;text-align:center;margin:6px 0 0}
+</style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="container row">
+      <a class="brand" href="index.html">
+        <img src="logo.png" alt="TipFin"/>
+        <div>
+          <div class="name">TIPFIN</div>
+          <div class="tag">Smart Lending</div>
+        </div>
+      </a>
+      <nav class="nav-desktop">
+        <a data-nav="index.html" href="index.html">Home</a>
+        <a data-nav="loans.html" href="loans.html">Loans</a>
+        <a data-nav="about.html" href="about.html">About</a>
+        <a data-nav="reviews.html" href="reviews.html">Reviews</a>
+        <a data-nav="contact.html" href="contact.html">Contact</a>
+      </nav>
+      <div class="header-cta">
+        <span data-online-users></span>
+        <span data-auth-cta></span>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="header-mobile-online"><span data-online-users></span></div>
+    <div class="mobile-menu" id="mobile-menu" hidden>
+      <a data-nav="index.html" href="index.html">🏠 Home</a>
+      <a data-nav="loans.html" href="loans.html">💰 Loan Products</a>
+      <a data-nav="apply.html" href="apply.html">📝 Apply</a>
+      <a data-nav="dashboard.html" href="dashboard.html">📊 Dashboard</a>
+      <a data-nav="about.html" href="about.html">ℹ️ About</a>
+      <a data-nav="reviews.html" href="reviews.html">⭐ Reviews</a>
+      <a data-nav="faq.html" href="faq.html">❓ FAQ</a>
+      <a data-nav="download.html" href="download.html">📱 Download App</a>
+      <a data-nav="contact.html" href="contact.html">📞 Contact</a>
+      <a data-nav="profile.html" href="profile.html">👤 My Profile</a>
+      <div class="mm-cta" data-auth-cta-mobile></div>
+      <div class="mm-contact">
+        <div><strong>📍 Address</strong><br/>20 Everest Street CE2, VANDERBIJLPARK 1911</div>
+        <div style="margin-top:8px"><strong>📞</strong> <a href="tel:+27685299179">+27 68 529 9179</a></div>
+        <div><strong>✉️</strong> <a href="mailto:info.tipfin@aol.com">info.tipfin@aol.com</a></div>
+      </div>
+    </div>
+  </header>
+
+<section class="dl-hero">
+  <div class="container reveal">
+    <span class="eyebrow"><span class="dot"></span> Download</span>
+    <h1>Get the TIPFIN App on your phone</h1>
+    <p class="lead">Apply for loans, upload documents, and track your application from your home screen. Available for both iPhone and Android.</p>
+    <div class="dl-cta-row">
+      <a href="#android" class="btn btn-primary">⬇ Download for Android</a>
+      <a href="#iphone" class="btn btn-ghost">📱 Add to iPhone</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="dl-platform">
+
+      <!-- iPhone -->
+      <div class="dl-card reveal" id="iphone">
+        <span class="dl-icon">📱</span>
+        <span class="pill-tag" style="background:#e0e7ff;color:#3730a3;margin-left:8px">Recommended: Safari</span>
+        <h2>For iPhone Users</h2>
+        <p class="sub">Add TIPFIN to your Home Screen using Safari (recommended) or Chrome — no App Store needed.</p>
+
+        <h4 style="margin-top:18px;margin-bottom:0">Steps to Add TIPFIN to Your Home Screen</h4>
+        <ol class="step-list">
+          <li><b>Open Safari</b><span>Launch the Safari app on your iPhone.</span></li>
+          <li><b>Visit the Website</b><span>Go to the TIPFIN page you want to add.</span></li>
+          <li><b>Tap the Share Button</b><span>Click the Share button at the bottom of the screen (the square with an arrow pointing up).</span></li>
+          <li><b>Select "Add to Home Screen"</b><span>Scroll down the menu and tap <em>Add to Home Screen</em>. If you don't see it, select <em>Edit Actions</em> to add the option.</span></li>
+        </ol>
+
+        <h4 style="margin-top:22px;margin-bottom:6px">Using Chrome on iPhone</h4>
+        <p class="sub" style="margin-top:0">If you use Google Chrome, you can also add sites to your home screen — though Safari is recommended for full web app features.</p>
+        <ol class="step-list">
+          <li><b>Open Chrome</b><span>Launch the Chrome app.</span></li>
+          <li><b>Go to the website</b><span>Visit the TIPFIN page you want.</span></li>
+          <li><b>Tap the Share icon</b><span>It's to the right of the address bar.</span></li>
+          <li><b>Select Add to Home Screen</b><span>Confirm to install.</span></li>
+        </ol>
+
+        <h4 style="margin-top:22px;margin-bottom:6px">Benefits</h4>
+        <ul class="benefits">
+          <li><span><b>Quick Access</b> — Opens directly to TIPFIN from your home screen.</span></li>
+          <li><span><b>Standalone Window</b> — Looks and feels like a native app.</span></li>
+          <li><span><b>Always Available</b> — One tap to your loan dashboard.</span></li>
+        </ul>
+
+        <a class="btn btn-primary btn-block" style="margin-top:20px" href="javascript:void(0)" onclick="alert('On your iPhone, tap the Share button in Safari, then choose Add to Home Screen.')">Install on iPhone</a>
+      </div>
+
+      <!-- Android -->
+      <div class="dl-card reveal" id="android">
+        <span class="dl-icon">🤖</span>
+        <span class="pill-tag" style="margin-left:8px">Direct APK</span>
+        <h2>For Android Users</h2>
+        <p class="sub">Download and install the TIPFIN APK directly to your device. Open this page on your Android device for the easiest install.</p>
+
+        <h4 style="margin-top:18px;margin-bottom:0">2. Downloading the App</h4>
+        <ol class="step-list">
+          <li><b>Click the Download Link</b><span>Open this Download page on your Android browser (e.g., Chrome). Tap the download button below to get the <code>TIPFIN.apk</code> file.</span></li>
+          <li><b>Download Begins</b><span>The .apk file will begin downloading to your device's Downloads folder.</span></li>
+        </ol>
+
+        <h4 style="margin-top:18px;margin-bottom:0">3. Installing the App</h4>
+        <ol class="step-list">
+          <li><b>Security Warning</b><span>Because the app is not from the Play Store, Android may display a warning that the file might be from an unknown source.</span></li>
+          <li><b>Allow Unknown Sources</b><span>Tap <em>Open</em> or <em>Install</em>. If prompted, go to <em>Settings → Allow from this source</em>.</span></li>
+          <li><b>Complete Installation</b><span>The TIPFIN app will install and appear in your device's app menu.</span></li>
+        </ol>
+
+        <div class="tips-card">
+          <h4>Key Tips for Success</h4>
+          <ul>
+            <li><b>Direct Access:</b> Open the download link directly from your Android device to initiate the download.</li>
+            <li>Make sure you have at least <b>30 MB</b> of free space.</li>
+            <li>Keep your device connected to <b>Wi-Fi</b> for the fastest download.</li>
+          </ul>
+        </div>
+
+        <div class="download-bar">
+          <div>
+            <h3>⬇ Download TIPFIN.apk</h3>
+            <div class="meta">Version 1.0.4 · Updated April 2026 · ~28 MB</div>
+          </div>
+          <a class="btn btn-primary" href="TIPFIN.apk" download="TIPFIN.apk" id="apk-btn">Download Now</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Why install -->
+    <div class="reveal" style="margin-top:36px">
+      <div style="text-align:center">
+        <span class="eyebrow"><span class="dot"></span> Benefits</span>
+        <h2 style="margin-top:10px">Why install the TIPFIN app?</h2>
+        <p class="muted">The full TIPFIN experience, right on your home screen.</p>
+      </div>
+      <div class="why-grid">
+        <div class="why-card"><div class="ic">⚡</div><h4>Faster Access</h4><p>Skip the browser. Open your dashboard with a single tap.</p></div>
+        <div class="why-card"><div class="ic">🔔</div><h4>Stay Updated</h4><p>Get notified the moment your loan status changes.</p></div>
+        <div class="why-card"><div class="ic">🔒</div><h4>Bank-Grade Security</h4><p>End-to-end encryption on every action — same as the website.</p></div>
+      </div>
+    </div>
+
+    <div class="phone-mock reveal">
+      <div class="pf">
+        <div class="scr">
+          <img src="logo.png" alt="TIPFIN"/>
+          <h5>TIPFIN</h5>
+          <p>Smart, secure digital lending — right on your home screen.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="grid">
+        <div>
+          <a class="brand" style="color:#fff" href="index.html">
+            <img src="logo.png" alt="TipFin"/>
+            <div>
+              <div class="name">TIPFIN (PTY) LTD</div>
+              <div class="tag" style="color:#9aa6b6">Smart Lending</div>
+            </div>
+          </a>
+          <p style="color:#9aa6b6;margin-top:14px;max-width:380px">
+            Next-generation digital lending. Apply online, upload documents, track every step
+            from your secure dashboard.
+          </p>
+          <p style="color:#9aa6b6;margin-top:6px;font-size:.85rem">
+            NCR Reg No: <strong style="color:#fff">NCRCP22024</strong><br/>
+            Legal Reg No: <strong style="color:#fff">2024/669652/07</strong><br/>
+            <strong style="color:#fff">Address:</strong> 20 Everest Street CE2, VANDERBIJLPARK 1911<br/>
+            <strong style="color:#fff">Town:</strong> VANDERBIJLPARK<br/>
+            Email: <a href="mailto:info.tipfin@aol.com">info.tipfin@aol.com</a><br/>
+            Phone: <a href="tel:+27685299179">+27 68 529 9179</a><br/>
+            WhatsApp: <a href="https://wa.me/27685299179" target="_blank" rel="noopener">+27 68 529 9179</a>
+          </p>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <a href="index.html">Home</a>
+          <a href="apply.html">Apply</a>
+          <a href="about.html">About</a>
+          <a href="loans.html">Loan Types</a>
+          <a href="download.html">Download App</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div>
+          <h4>Loan Products</h4>
+          <a href="loans.html">Personal Loans</a>
+          <a href="loans.html">Business Loans</a>
+          <a href="loans.html">Vehicle Loans</a>
+          <a href="loans.html">Debt Consolidation</a>
+          <a href="loans.html">Education Loans</a>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <a href="faq.html">FAQs</a>
+          <a href="contact.html">Privacy Policy</a>
+          <a href="contact.html">Terms of Service</a>
+          <a href="contact.html">PAIA Manual</a>
+          <a href="contact.html">Complaints</a>
+        </div>
+      </div>
+      <div class="legal">
+        <div>© <span data-year></span> TIPFIN (PTY) LTD. All rights reserved.</div>
+        <div>Application & approval are automated. Final payout completed via TIPFIN (PTY) LTD.</div>
+      </div>
+    </div>
+  </footer>
+
+  <nav class="mobile-tabs" aria-label="Mobile navigation">
+    <a data-nav="index.html" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg>
+      Home
+    </a>
+    <a data-nav="loans.html" href="loans.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>
+      Loans
+    </a>
+    <a data-nav="apply.html" href="apply.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+      Apply
+    </a>
+    <a data-nav="dashboard.html" href="dashboard.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="9" rx="1"/><rect x="13" y="3" width="8" height="5" rx="1"/><rect x="13" y="10" width="8" height="11" rx="1"/><rect x="3" y="14" width="8" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a data-nav="download.html" href="download.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg>
+      Get App
+    </a>
+  </nav>
+
+  <a class="wa-float" href="https://wa.me/27685299179?text=Hi%20TipFin%2C%20I%20need%20help%20with%20my%20loan." target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <span class="wa-pulse"></span>
+    <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+      <path d="M19.11 17.34c-.28-.14-1.66-.82-1.92-.91-.26-.1-.45-.14-.64.14-.19.28-.73.91-.9 1.1-.17.19-.33.21-.61.07-.28-.14-1.18-.43-2.25-1.39-.83-.74-1.39-1.66-1.55-1.94-.16-.28-.02-.43.12-.57.13-.13.28-.33.42-.5.14-.17.19-.28.28-.47.09-.19.05-.35-.02-.5-.07-.14-.64-1.55-.88-2.13-.23-.55-.46-.48-.64-.48l-.55-.01c-.19 0-.5.07-.76.35-.26.28-1 .98-1 2.39s1.02 2.77 1.16 2.96c.14.19 2.02 3.08 4.9 4.32.69.3 1.22.48 1.64.61.69.22 1.32.19 1.81.12.55-.08 1.66-.68 1.9-1.34.23-.65.23-1.21.16-1.34-.07-.13-.26-.21-.54-.35z"/>
+      <path d="M27.31 4.69C24.27 1.65 20.23 0 16 0 7.18 0 0 7.18 0 16c0 2.81.74 5.55 2.13 7.97L0 32l8.23-2.16C10.57 31.27 13.24 32 16 32c8.82 0 16-7.18 16-16 0-4.23-1.65-8.27-4.69-11.31zM16 29.34c-2.49 0-4.93-.67-7.05-1.94l-.5-.3-4.89 1.28 1.31-4.76-.33-.51A13.32 13.32 0 0 1 2.66 16C2.66 8.65 8.65 2.66 16 2.66c3.56 0 6.91 1.39 9.43 3.91A13.27 13.27 0 0 1 29.34 16c0 7.35-5.99 13.34-13.34 13.34z"/>
+    </svg>
+    <span class="wa-tip">Chat with us on WhatsApp</span>
+  </a>
+<script src="_partials.js"></script>
+<script src="app.js"></script>
+<script>
+// Friendly fallback message if APK isn't on the server yet
+document.getElementById("apk-btn").addEventListener("click", function(e){
+  // We let the browser try — if there's no apk, the user will see a 404 we can mitigate.
+  // Show a quick toast either way so users know what to do next.
+  try { window.tipfinToast && window.tipfinToast("Starting download — open the file from Android to install.", "ok"); } catch(_){}
+});
+</script>
+</body>
+</html>

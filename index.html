@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<title>TIPFIN — Smart, secure digital lending</title>
+<meta name="description" content="Instant loan approvals, secure processing and real results. Apply, upload documents and track your loan from your dashboard."/>
+<link rel="icon" type="image/png" href="logo.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="container row">
+      <a class="brand" href="index.html">
+        <img src="logo.png" alt="TipFin"/>
+        <div>
+          <div class="name">TIPFIN</div>
+          <div class="tag">Smart Lending</div>
+        </div>
+      </a>
+      <nav class="nav-desktop">
+        <a data-nav="index.html" href="index.html">Home</a>
+        <a data-nav="loans.html" href="loans.html">Loans</a>
+        <a data-nav="about.html" href="about.html">About</a>
+        <a data-nav="reviews.html" href="reviews.html">Reviews</a>
+        <a data-nav="contact.html" href="contact.html">Contact</a>
+      </nav>
+      <div class="header-cta">
+        <span data-online-users></span>
+        <span data-auth-cta></span>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="header-mobile-online"><span data-online-users></span></div>
+    <div class="mobile-menu" id="mobile-menu" hidden>
+      <a data-nav="index.html" href="index.html">🏠 Home</a>
+      <a data-nav="loans.html" href="loans.html">💰 Loan Products</a>
+      <a data-nav="apply.html" href="apply.html">📝 Apply</a>
+      <a data-nav="dashboard.html" href="dashboard.html">📊 Dashboard</a>
+      <a data-nav="about.html" href="about.html">ℹ️ About</a>
+      <a data-nav="reviews.html" href="reviews.html">⭐ Reviews</a>
+      <a data-nav="faq.html" href="faq.html">❓ FAQ</a>
+      <a data-nav="download.html" href="download.html">📱 Download App</a>
+      <a data-nav="contact.html" href="contact.html">📞 Contact</a>
+      <a data-nav="profile.html" href="profile.html">👤 My Profile</a>
+      <div class="mm-cta" data-auth-cta-mobile></div>
+      <div class="mm-contact">
+        <div><strong>📍 Address</strong><br/>20 Everest Street CE2, VANDERBIJLPARK 1911</div>
+        <div style="margin-top:8px"><strong>📞</strong> <a href="tel:+27685299179">+27 68 529 9179</a></div>
+        <div><strong>✉️</strong> <a href="mailto:info.tipfin@aol.com">info.tipfin@aol.com</a></div>
+      </div>
+    </div>
+  </header>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="blob b1"></span>
+  <span class="blob b2"></span>
+  <div class="container hero-grid">
+    <div class="reveal">
+      <span class="eyebrow"><span class="dot"></span> Now accepting applications</span>
+      <h1 style="margin-top:14px">Instant approvals. <br/><span>Real results.</span></h1>
+      <p class="lead">A next-generation digital lending platform built to simplify how you access finance — personal loans, business funding, vehicle finance, debt consolidation and more. Apply online, upload your documents, and track every step from your dashboard.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="register.html">Apply Now — it's free</a>
+        <a class="btn btn-ghost" href="loans.html">Check eligibility</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="num">R250M+</div><div class="lbl">Funded</div></div>
+        <div class="stat"><div class="num">98%</div><div class="lbl">Approval rate</div></div>
+        <div class="stat"><div class="num">4.9★</div><div class="lbl">Customer rating</div></div>
+      </div>
+    </div>
+    <div class="hero-art reveal zoom">
+      <span class="coin" style="top:6%;left:8%">$</span>
+      <span class="coin c2" style="top:18%;right:6%">€</span>
+      <span class="coin c3" style="bottom:8%;left:12%">R</span>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="ph-greet">Welcome back,</div>
+          <div class="ph-name">Sarah M.</div>
+          <div class="ph-bal">
+            <small>Approved Loan</small>
+            <div class="amt">R 75,000</div>
+            <div class="row"><span>Term: 24 months</span><span>R 3,406 / mo</span></div>
+          </div>
+          <div class="ph-quick">
+            <div class="q"><div class="ic">↑</div>Apply</div>
+            <div class="q"><div class="ic">⏱</div>Track</div>
+            <div class="q"><div class="ic">↗</div>Pay</div>
+            <div class="q"><div class="ic">★</div>Offers</div>
+          </div>
+          <div class="ph-list">
+            <div class="it"><div class="l"><div class="pic">P</div><div><div style="font-weight:700">Personal Loan</div><div style="color:#6a7686;font-size:.7rem">Approved · Aug 12</div></div></div><div style="color:#16a34a;font-weight:700">+R75,000</div></div>
+            <div class="it"><div class="l"><div class="pic">B</div><div><div style="font-weight:700">Bank Statement</div><div style="color:#6a7686;font-size:.7rem">Verified</div></div></div><div style="color:#16a34a;font-weight:700">✓</div></div>
+            <div class="it"><div class="l"><div class="pic">I</div><div><div style="font-weight:700">ID Document</div><div style="color:#6a7686;font-size:.7rem">Verified</div></div></div><div style="color:#16a34a;font-weight:700">✓</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE STRIP -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>🔒 Secure & encrypted</span><span class="dotsep">●</span>
+    <span>⚡ Approval in 30 minutes</span><span class="dotsep">●</span>
+    <span>📱 100% mobile-friendly</span><span class="dotsep">●</span>
+    <span>🌍 Multi-country support</span><span class="dotsep">●</span>
+    <span>📂 Upload from your phone</span><span class="dotsep">●</span>
+    <span>💬 24/7 WhatsApp support</span><span class="dotsep">●</span>
+    <span>🔒 Secure & encrypted</span><span class="dotsep">●</span>
+    <span>⚡ Approval in 30 minutes</span><span class="dotsep">●</span>
+    <span>📱 100% mobile-friendly</span><span class="dotsep">●</span>
+    <span>🌍 Multi-country support</span><span class="dotsep">●</span>
+    <span>📂 Upload from your phone</span><span class="dotsep">●</span>
+    <span>💬 24/7 WhatsApp support</span><span class="dotsep">●</span>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span> How it works</span>
+      <h2>Get your loan in 3 simple steps</h2>
+      <p class="muted">A streamlined process from application to payout — designed to be fast and stress-free.</p>
+    </div>
+    <div class="grid cols-3 steps">
+      <div class="card step reveal">
+        <h3>Fill out application</h3>
+        <p>Complete our easy online application in minutes with our user-friendly mobile interface.</p>
+      </div>
+      <div class="card step reveal">
+        <h3>Quick review</h3>
+        <p>Our advanced automated system reviews your application — first-time applicants approved within 30 minutes.</p>
+      </div>
+      <div class="card step reveal">
+        <h3>Get your money</h3>
+        <p>Once approved, contact TIPFIN to complete the payout securely to your bank account.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOAN CALCULATOR -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span> Loan Calculator</span>
+      <h2>Estimate your monthly repayments</h2>
+      <p class="muted">Try before you apply — adjust the loan amount, type and term to see your monthly cost.</p>
+    </div>
+    <div class="grid cols-2" style="align-items:center">
+      <div class="calc reveal">
+        <h3>Calculate your repayments</h3>
+        <div class="field"><label>Loan Amount</label>
+          <div class="with-prefix"><span class="pre" id="calc-pre">R</span>
+            <input type="number" id="calc-amount" min="500" step="500" value="50000"/></div>
+        </div>
+        <div class="grid cols-2" style="gap:12px">
+          <div class="field"><label>Loan Type</label>
+            <select id="calc-type">
+              <option value="5">Personal Loan</option>
+              <option value="5">Business Loan</option>
+              <option value="5">Home Loan</option>
+              <option value="5">Vehicle Loan</option>
+              <option value="5">Education Loan</option>
+              <option value="5">Consolidation</option>
+            </select>
+            <span class="hint">Fixed 5% interest on all loan products.</span></div>
+          <div class="field"><label>Repayment Term</label>
+            <select id="calc-term">
+              <option value="3">3 months</option>
+              <option value="6">6 months</option>
+              <option value="12" selected>12 months</option>
+              <option value="18">18 months</option>
+              <option value="24">24 months</option>
+              <option value="36">36 months</option>
+              <option value="48">48 months</option>
+              <option value="60">60 months</option>
+            </select></div>
+        </div>
+        <div class="calc-result">
+          <div><div class="lbl">Monthly</div><div class="val" id="calc-monthly">R 4,292</div></div>
+          <div><div class="lbl">Total repayable</div><div class="val" id="calc-total">R 51,500</div></div>
+        </div>
+        <a class="btn btn-primary btn-block" href="register.html" style="margin-top:14px">Apply with these terms</a>
+      </div>
+
+      <!-- Animated illustration -->
+      <div class="illus reveal zoom">
+        <svg viewBox="0 0 400 360" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#ff5b4f"/><stop offset="1" stop-color="#7a1b14"/>
+            </linearGradient>
+            <linearGradient id="g2" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fde8e6"/>
+            </linearGradient>
+          </defs>
+          <!-- background discs -->
+          <circle cx="200" cy="190" r="150" fill="#fde8e6" class="grow"/>
+          <!-- giant coin spinning -->
+          <g class="spin" style="transform-origin:200px 190px">
+            <circle cx="200" cy="190" r="78" fill="url(#g1)"/>
+            <circle cx="200" cy="190" r="62" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2"/>
+            <text x="200" y="207" text-anchor="middle" fill="#fff" font-size="48" font-weight="800" font-family="Inter">$</text>
+          </g>
+          <!-- floating cards -->
+          <g class="float-1" transform="translate(40,60)">
+            <rect width="120" height="70" rx="14" fill="#fff" stroke="#e7eaee"/>
+            <rect x="10" y="14" width="50" height="8" rx="3" fill="#0f1620"/>
+            <rect x="10" y="32" width="80" height="6" rx="3" fill="#d8362a"/>
+            <rect x="10" y="46" width="40" height="6" rx="3" fill="#e7eaee"/>
+          </g>
+          <g class="float-2" transform="translate(260,30)">
+            <circle cx="22" cy="22" r="22" fill="#16a34a"/>
+            <path d="M12 22 l8 8 l14 -16" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <g class="float-3" transform="translate(300,220)">
+            <rect width="70" height="50" rx="12" fill="#fff" stroke="#e7eaee"/>
+            <rect x="8" y="12" width="50" height="6" rx="3" fill="#0f1620"/>
+            <rect x="8" y="22" width="36" height="6" rx="3" fill="#0ea5e9"/>
+            <rect x="8" y="32" width="22" height="6" rx="3" fill="#e7eaee"/>
+          </g>
+          <g class="float-1" transform="translate(50,260)">
+            <rect width="140" height="46" rx="10" fill="#0f1620"/>
+            <rect x="14" y="14" width="80" height="8" rx="3" fill="#fff"/>
+            <rect x="14" y="28" width="50" height="6" rx="3" fill="#9aa6b6"/>
+            <circle cx="118" cy="23" r="10" fill="#d8362a"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOAN TYPES -->
+<section>
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span> Our loan products</span>
+      <h2>Choose the right loan for your needs</h2>
+      <p class="muted">Competitive rates and flexible terms — we offer a loan for almost every situation.</p>
+    </div>
+    <div class="grid cols-3">
+      <div class="lt-card reveal">
+        <span class="lt-emoji">🏠</span>
+        <h3>Home Loan</h3>
+        <p>Perfect for purchasing, refinancing, or building your dream property.</p>
+        <ul>
+          <li>Up to R 5,000,000</li>
+          <li>Flexible terms up to 30 years</li>
+          <li>Quick approval process</li>
+          <li>Competitive interest rates</li>
+        </ul>
+        <span class="lt-rate">Interest rate: 5% (fixed)</span>
+        <a class="btn btn-primary" style="margin-top:14px" href="register.html">Apply Now</a>
+      </div>
+      <div class="lt-card reveal">
+        <span class="lt-emoji">👤</span>
+        <h3>Personal Loan</h3>
+        <p>Unsecured loans for personal use including education, medical and travel.</p>
+        <ul>
+          <li>Up to R 250,000</li>
+          <li>No collateral needed</li>
+          <li>Same-day approval</li>
+          <li>Flexible repayment terms</li>
+        </ul>
+        <span class="lt-rate">Interest rate: 5% (fixed)</span>
+        <a class="btn btn-primary" style="margin-top:14px" href="register.html">Apply Now</a>
+      </div>
+      <div class="lt-card reveal">
+        <span class="lt-emoji">💼</span>
+        <h3>Business Loan</h3>
+        <p>Working capital for registered businesses to fuel growth and expansion.</p>
+        <ul>
+          <li>Up to R 2,000,000</li>
+          <li>Tailored for businesses</li>
+          <li>Competitive rates</li>
+          <li>Business-friendly terms</li>
+        </ul>
+        <span class="lt-rate">Interest rate: 5% (fixed)</span>
+        <a class="btn btn-primary" style="margin-top:14px" href="register.html">Apply Now</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TYPES OF ONLINE LOANS -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span> Compare options</span>
+      <h2>Types of online loans we help you compare</h2>
+      <p class="muted">Discover the perfect loan solution for your financial needs.</p>
+    </div>
+    <div class="cmp-grid">
+      <a href="register.html" class="cmp reveal"><div class="cmp-ic">⚡</div><h3>Same day loans</h3><p>Fast access to cash, often paid out within hours.</p><span class="cmp-link">Learn more →</span></a>
+      <a href="register.html" class="cmp reveal"><div class="cmp-ic">💼</div><h3>Business loans</h3><p>Funding to help companies grow and scale.</p><span class="cmp-link">Learn more →</span></a>
+      <a href="register.html" class="cmp reveal"><div class="cmp-ic">🚀</div><h3>Instant loans</h3><p>Designed for speed — approved within minutes.</p><span class="cmp-link">Learn more →</span></a>
+      <a href="register.html" class="cmp reveal"><div class="cmp-ic">💵</div><h3>Cash loans</h3><p>Quick access to money for short-term needs.</p><span class="cmp-link">Learn more →</span></a>
+      <a href="register.html" class="cmp reveal"><div class="cmp-ic">👤</div><h3>Personal loans</h3><p>Flexible financing for various personal needs.</p><span class="cmp-link">Learn more →</span></a>
+      <a href="register.html" class="cmp reveal"><div class="cmp-ic">📅</div><h3>Payday loans</h3><p>Short-term loans until your next salary.</p><span class="cmp-link">Learn more →</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- WHO CAN APPLY -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="grid cols-2" style="align-items:center;gap:36px">
+      <div class="reveal">
+        <span class="eyebrow"><span class="dot"></span> Eligibility</span>
+        <h2 style="margin-top:8px">Who can apply for a loan?</h2>
+        <p>TIPFIN keeps things simple. Most adults with a valid ID and a working bank account can apply within minutes.</p>
+        <div class="elig-list">
+          <div class="elig-item"><div class="elig-num">1</div><div><strong>Over 18 years old</strong><div class="muted small">Valid government-issued ID required.</div></div></div>
+          <div class="elig-item"><div class="elig-num">2</div><div><strong>Able to repay on time</strong><div class="muted small">Verifiable income or proof of repayment ability.</div></div></div>
+          <div class="elig-item"><div class="elig-num">3</div><div><strong>Active bank account</strong><div class="muted small">For secure payout once approved.</div></div></div>
+        </div>
+      </div>
+      <div class="illus reveal zoom">
+        <svg viewBox="0 0 400 360" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="200" cy="180" r="140" fill="#fde8e6" class="grow"/>
+          <!-- person card -->
+          <g class="float-1" transform="translate(120,80)">
+            <rect width="160" height="200" rx="20" fill="#fff" stroke="#e7eaee"/>
+            <circle cx="80" cy="60" r="32" fill="url(#gA)"/>
+            <defs><linearGradient id="gA" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ff5b4f"/><stop offset="1" stop-color="#7a1b14"/></linearGradient></defs>
+            <rect x="40" y="110" width="80" height="8" rx="4" fill="#0f1620"/>
+            <rect x="50" y="126" width="60" height="6" rx="3" fill="#9aa6b6"/>
+            <rect x="20" y="148" width="120" height="38" rx="8" fill="#fde8e6"/>
+            <rect x="30" y="160" width="80" height="6" rx="3" fill="#d8362a"/>
+            <rect x="30" y="172" width="50" height="6" rx="3" fill="#d8362a" opacity=".6"/>
+          </g>
+          <!-- check badge -->
+          <g class="float-2" transform="translate(280,100)">
+            <circle cx="22" cy="22" r="22" fill="#16a34a"/>
+            <path d="M12 22 l8 8 l14 -16" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <!-- ID card -->
+          <g class="float-3" transform="translate(70,260)">
+            <rect width="110" height="68" rx="10" fill="#0f1620"/>
+            <circle cx="22" cy="34" r="14" fill="#d8362a"/>
+            <rect x="44" y="20" width="58" height="6" rx="3" fill="#fff"/>
+            <rect x="44" y="32" width="40" height="5" rx="2" fill="#9aa6b6"/>
+            <rect x="44" y="42" width="50" height="5" rx="2" fill="#9aa6b6"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT TIPFIN SHORT -->
+<section>
+  <div class="container">
+    <div class="grid cols-2" style="gap:36px;align-items:center">
+      <div class="feature-img reveal" style="aspect-ratio:5/4">
+        <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1200&q=70" alt="Office team"/>
+      </div>
+      <div class="reveal">
+        <span class="eyebrow"><span class="dot"></span> About TIPFIN</span>
+        <h2 style="margin-top:8px">What is TIPFIN?</h2>
+        <p>TIPFIN (PTY) LTD helps borrowers in South Africa and beyond access loans from a network of trusted lending partners. We provide direct access to vetted, regulated finance options through one secure online platform — completely free to use.</p>
+        <p><strong>NCR Reg:</strong> NCRCP22024 · <strong>Legal Reg:</strong> 2024/669652/07</p>
+        <a class="btn btn-primary" href="register.html">Apply now</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS HOME -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span> Customer reviews</span>
+      <h2>What our clients say about us</h2>
+      <p class="muted">Real reviews from real borrowers — updated daily.</p>
+    </div>
+    <div class="grid cols-2" style="align-items:start">
+      <div class="testify reveal">
+        <div class="body">
+          <p>"Excellent customer service and quick processing. Got my personal loan approved in less than 24 hours — and the dashboard tracking is something I've never seen before."</p>
+          <div class="who">
+            <div class="av">SM</div>
+            <div><div style="font-weight:800">Sarah M.</div><div class="muted small">Verified borrower · Cape Town, WC</div></div>
+          </div>
+          <div style="color:#f5b400;letter-spacing:3px;margin-top:8px">★★★★★</div>
+        </div>
+      </div>
+      <div class="reveal" id="home-recent-reviews"></div>
+    </div>
+    <div class="center" style="margin-top:24px">
+      <a class="btn btn-ghost" href="reviews.html">Read more reviews →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ TEASER -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span> FAQ</span>
+      <h2>Frequently asked questions</h2>
+      <p class="muted">Find answers to the most common questions.</p>
+    </div>
+    <div class="faq-mini" style="max-width:800px;margin:0 auto">
+      <details class="reveal" open><summary>How long does approval take?</summary><div class="a">Most first-time applicants receive an approval decision within 30 minutes. Returning users who applied within the past 30 days are approved instantly.</div></details>
+      <details class="reveal"><summary>Is my information safe?</summary><div class="a">Yes. All data is encrypted in transit and at rest. We only use your information to evaluate your application.</div></details>
+      <details class="reveal"><summary>Do you charge hidden fees?</summary><div class="a">No. All fees and rates are transparent and shown to you before you accept a loan.</div></details>
+      <details class="reveal"><summary>What are the eligibility requirements?</summary><div class="a">You must be 18+, have a valid ID and an active bank account. We accept multiple income sources including self-employment.</div></details>
+    </div>
+    <div class="center" style="margin-top:18px"><a class="btn btn-ghost" href="faq.html">See all FAQs →</a></div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section>
+  <div class="container">
+    <div class="banner reveal">
+      <div>
+        <span class="eyebrow" style="background:rgba(255,255,255,.15);color:#fff;border-color:transparent">Ready to get funded?</span>
+        <h2 style="margin-top:8px">Apply today and join thousands of borrowers</h2>
+        <p>Get tracked instantly from your secure dashboard.</p>
+      </div>
+      <a class="btn btn-ghost" href="register.html">Start my application</a>
+      <span class="deco"></span><span class="deco2"></span>
+    </div>
+  </div>
+</section>
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="grid">
+        <div>
+          <a class="brand" style="color:#fff" href="index.html">
+            <img src="logo.png" alt="TipFin"/>
+            <div>
+              <div class="name">TIPFIN (PTY) LTD</div>
+              <div class="tag" style="color:#9aa6b6">Smart Lending</div>
+            </div>
+          </a>
+          <p style="color:#9aa6b6;margin-top:14px;max-width:380px">
+            Next-generation digital lending. Apply online, upload documents, track every step
+            from your secure dashboard.
+          </p>
+          <p style="color:#9aa6b6;margin-top:6px;font-size:.85rem">
+            NCR Reg No: <strong style="color:#fff">NCRCP22024</strong><br/>
+            Legal Reg No: <strong style="color:#fff">2024/669652/07</strong><br/>
+            <strong style="color:#fff">Address:</strong> 20 Everest Street CE2, VANDERBIJLPARK 1911<br/>
+            <strong style="color:#fff">Town:</strong> VANDERBIJLPARK<br/>
+            Email: <a href="mailto:info.tipfin@aol.com">info.tipfin@aol.com</a><br/>
+            Phone: <a href="tel:+27685299179">+27 68 529 9179</a><br/>
+            WhatsApp: <a href="https://wa.me/27685299179" target="_blank" rel="noopener">+27 68 529 9179</a>
+          </p>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <a href="index.html">Home</a>
+          <a href="apply.html">Apply</a>
+          <a href="about.html">About</a>
+          <a href="loans.html">Loan Types</a>
+          <a href="download.html">Download App</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div>
+          <h4>Loan Products</h4>
+          <a href="loans.html">Personal Loans</a>
+          <a href="loans.html">Business Loans</a>
+          <a href="loans.html">Vehicle Loans</a>
+          <a href="loans.html">Debt Consolidation</a>
+          <a href="loans.html">Education Loans</a>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <a href="faq.html">FAQs</a>
+          <a href="contact.html">Privacy Policy</a>
+          <a href="contact.html">Terms of Service</a>
+          <a href="contact.html">PAIA Manual</a>
+          <a href="contact.html">Complaints</a>
+        </div>
+      </div>
+      <div class="legal">
+        <div>© <span data-year></span> TIPFIN (PTY) LTD. All rights reserved.</div>
+        <div>Application & approval are automated. Final payout completed via TIPFIN (PTY) LTD.</div>
+      </div>
+    </div>
+  </footer>
+
+  <nav class="mobile-tabs" aria-label="Mobile navigation">
+    <a data-nav="index.html" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg>
+      Home
+    </a>
+    <a data-nav="loans.html" href="loans.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>
+      Loans
+    </a>
+    <a data-nav="apply.html" href="apply.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+      Apply
+    </a>
+    <a data-nav="dashboard.html" href="dashboard.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="9" rx="1"/><rect x="13" y="3" width="8" height="5" rx="1"/><rect x="13" y="10" width="8" height="11" rx="1"/><rect x="3" y="14" width="8" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a data-nav="download.html" href="download.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg>
+      Get App
+    </a>
+  </nav>
+
+  <a class="wa-float" href="https://wa.me/27685299179?text=Hi%20TipFin%2C%20I%20need%20help%20with%20my%20loan." target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <span class="wa-pulse"></span>
+    <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+      <path d="M19.11 17.34c-.28-.14-1.66-.82-1.92-.91-.26-.1-.45-.14-.64.14-.19.28-.73.91-.9 1.1-.17.19-.33.21-.61.07-.28-.14-1.18-.43-2.25-1.39-.83-.74-1.39-1.66-1.55-1.94-.16-.28-.02-.43.12-.57.13-.13.28-.33.42-.5.14-.17.19-.28.28-.47.09-.19.05-.35-.02-.5-.07-.14-.64-1.55-.88-2.13-.23-.55-.46-.48-.64-.48l-.55-.01c-.19 0-.5.07-.76.35-.26.28-1 .98-1 2.39s1.02 2.77 1.16 2.96c.14.19 2.02 3.08 4.9 4.32.69.3 1.22.48 1.64.61.69.22 1.32.19 1.81.12.55-.08 1.66-.68 1.9-1.34.23-.65.23-1.21.16-1.34-.07-.13-.26-.21-.54-.35z"/>
+      <path d="M27.31 4.69C24.27 1.65 20.23 0 16 0 7.18 0 0 7.18 0 16c0 2.81.74 5.55 2.13 7.97L0 32l8.23-2.16C10.57 31.27 13.24 32 16 32c8.82 0 16-7.18 16-16 0-4.23-1.65-8.27-4.69-11.31zM16 29.34c-2.49 0-4.93-.67-7.05-1.94l-.5-.3-4.89 1.28 1.31-4.76-.33-.51A13.32 13.32 0 0 1 2.66 16C2.66 8.65 8.65 2.66 16 2.66c3.56 0 6.91 1.39 9.43 3.91A13.27 13.27 0 0 1 29.34 16c0 7.35-5.99 13.34-13.34 13.34z"/>
+    </svg>
+    <span class="wa-tip">Chat with us on WhatsApp</span>
+  </a>
+<script src="_partials.js"></script>
+<script src="app.js"></script>
+<script src="reviews.js"></script>
+<script>
+/* Calculator */
+(function(){
+  const a = document.getElementById("calc-amount");
+  const t = document.getElementById("calc-type");
+  const tm = document.getElementById("calc-term");
+  function calc(){
+    const amt = Math.max(0, parseFloat(a.value)||0);
+    const months = parseInt(tm.value) || 1;
+    // Fixed 5% interest, truncated to 2 decimals
+    const total = TIPFIN_COUNTRY.calcTotal(amt);
+    const monthly = TIPFIN_COUNTRY.calcMonthly(amt, months);
+    const fmt = n => "R " + n.toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2});
+    document.getElementById("calc-monthly").textContent = fmt(monthly);
+    document.getElementById("calc-total").textContent = fmt(total);
+  }
+  ;[a,t,tm].forEach(el=> el.addEventListener("input", calc));
+  calc();
+})();
+
+/* Recent reviews snippet on home */
+(function(){
+  if (!window.TIPFIN_REVIEWS) return;
+  const all = TIPFIN_REVIEWS.getAllReviews().slice(0, 3);
+  const host = document.getElementById("home-recent-reviews");
+  if (host) host.innerHTML = '<div class="rev-grid" style="grid-template-columns:1fr">' + all.map(TIPFIN_REVIEWS.renderReview).join("") + '</div>';
+})();
+</script>
+</body>
+</html>

@@ -225,7 +225,6 @@ const FIELDS = {
   reference:   "field_8136520",
   cashcode:    "field_8136521",
   payproof:    "field_8136522",
-  address:     "field_8203100",
 };
 
 /* Upload a file to Baserow user-files. Returns { name, url, ... }. */

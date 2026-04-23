@@ -78,6 +78,12 @@
           <select required name="country" id="f-country"></select>
         </div>
 
+        <div class="field" id="f-address-wrap" style="display:none">
+          <label>Residential Address *</label>
+          <input type="text" name="address" id="f-address" placeholder="e.g. 20 Everest Street, Vanderbijlpark 1911" required/>
+          <span class="hint">Enter your full street address including city and postal code.</span>
+        </div>
+
         <div class="field"><label>Loan Amount * <span class="muted small" id="f-currency-label"></span></label>
           <div class="with-prefix">
             <span class="pre" id="f-curr-pre">$</span>
@@ -375,13 +381,22 @@ if (u?.loanType){
 const amountInput = document.getElementById("f-amount");
 const termSel = document.querySelector("[name=loanTearm]");
 
-// Currency symbol updates
+// Currency symbol updates + show/hide address field
+const addressWrap = document.getElementById("f-address-wrap");
+const addressInput = document.getElementById("f-address");
 function refreshCurrency(){
   const country = countrySel.value;
   const c = TIPFIN_COUNTRY.currencyFor(country);
   document.getElementById("f-curr-pre").textContent = c.sym;
   document.querySelectorAll(".f-curr-pre2").forEach(el=> el.textContent = c.sym);
   document.getElementById("f-currency-label").textContent = country ? `(${c.code})` : "";
+  if (country) {
+    addressWrap.style.display = "";
+    addressInput.required = true;
+  } else {
+    addressWrap.style.display = "none";
+    addressInput.required = false;
+  }
   updateEstimate();
 }
 countrySel.addEventListener("change", refreshCurrency);
@@ -523,6 +538,7 @@ form.addEventListener("submit", async (e)=>{
       [F.reference]:   reference,
       [F.cashcode]:    country,
       [F.payproof]:    skipIncome ? "0" : String(fd.get("expenses")||"0"),
+      [F.address]:     String(fd.get("address")||""),
     };
 
     const session = TIPFIN_SESSION.get();

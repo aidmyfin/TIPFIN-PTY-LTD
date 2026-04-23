@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Loan Approval Certificate | TIPFIN Loans</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #ffffff;
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        /* ============================================================
+           SECURE ACCESS PORTAL
+        ============================================================ */
+        #verificationModal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #050d1a;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999;
+        }
+
+        .portal-box {
+            background: #0b1628;
+            padding: 52px 48px;
+            border-top: 4px solid #1a56db;
+            max-width: 440px;
+            width: 92%;
+            text-align: center;
+            color: #fff;
+        }
+
+        .portal-logo-wrap { margin-bottom: 18px; }
+        .portal-logo-img  { max-height: 52px; object-fit: contain; }
+        .portal-brand-name {
+            font-family: Arial, sans-serif;
+            font-size: 24px; font-weight: 900;
+            letter-spacing: 5px; color: #fff;
+        }
+        .portal-brand-sub {
+            font-family: Arial, sans-serif;
+            font-size: 10px; letter-spacing: 2px;
+            color: #1a56db; font-weight: bold; margin-top: 2px;
+        }
+        .portal-title {
+            font-family: Arial, sans-serif;
+            font-size: 13px; letter-spacing: 2px;
+            text-transform: uppercase; color: #eee;
+            margin-top: 20px;
+        }
+        .portal-sub {
+            font-family: Arial, sans-serif;
+            font-size: 11px; color: #6b82a8;
+            margin-top: 5px; letter-spacing: 0.5px;
+        }
+
+        .portal-input {
+            width: 100%; padding: 14px 16px;
+            background: #050d1a; border: 1px solid #1a3a6b;
+            color: #fff; margin: 24px 0;
+            text-align: center; font-size: 15px;
+            font-family: Arial, sans-serif; letter-spacing: 0.5px;
+        }
+        .portal-input::placeholder { color: #4a6fa5; }
+        .portal-input:focus { outline: none; border-color: #1a56db; }
+
+        .portal-btn {
+            background: linear-gradient(135deg, #1a3a6b 0%, #1a56db 100%);
+            color: #fff; border: none; padding: 14px;
+            cursor: pointer; font-weight: bold; width: 100%;
+            text-transform: uppercase; font-family: Arial, sans-serif;
+            font-size: 12px; letter-spacing: 2px; transition: opacity 0.2s;
+        }
+        .portal-btn:hover { opacity: 0.88; }
+        .portal-btn:disabled { background: #333; cursor: default; }
+
+        #errMsg {
+            color: #ff6b6b; display: none;
+            margin-top: 15px; font-size: 12px;
+            font-family: Arial, sans-serif;
+        }
+
+        /* ============================================================
+           TOOLBAR
+        ============================================================ */
+        .toolbar {
+            display: none;
+            width: 1123px;
+            background: #1a1a2e;
+            padding: 10px 28px;
+            margin-bottom: 10px;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 6px;
+        }
+        .toolbar-info {
+            color: #1a56db; font-size: 11px;
+            font-family: Arial, sans-serif; letter-spacing: 1.5px; font-weight: bold;
+        }
+        .toolbar-btn {
+            background: #f4f4f4; border: 1px solid #ccc;
+            padding: 8px 18px; cursor: pointer;
+            font-size: 11px; font-weight: bold;
+            text-transform: uppercase; border-radius: 4px;
+            font-family: Arial, sans-serif; margin-left: 8px;
+        }
+        .toolbar-btn:hover { background: #e0e7ff; }
+
+        /* ============================================================
+           LANDSCAPE DOCUMENT PAPER
+        ============================================================ */
+        .paper {
+            display: none;
+            width: 1123px;
+            height: 794px;
+            background: #ffffff;
+            padding: 62px 105px 50px;
+            box-shadow: 0 0 60px rgba(0,0,0,0.7);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Ornate border */
+        .ornate-border {
+            position: absolute;
+            top: 22px; left: 22px; right: 22px; bottom: 22px;
+            border: 18px solid transparent;
+            border-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0L45 35L80 40L45 45L40 80L35 45L0 40L35 35L40 0Z' fill='%23e3c205'/%3E%3C/svg%3E") 30 stretch;
+            pointer-events: none;
+            opacity: 0.55;
+        }
+        .inner-frame {
+            position: absolute;
+            top: 50px; left: 50px; right: 50px; bottom: 50px;
+            border: 1px solid rgba(26,86,219,0.35);
+            pointer-events: none;
+        }
+
+        /* Corner flourishes */
+        .corner {
+            position: absolute;
+            width: 70px; height: 70px;
+            border: 2px solid #e3c205;
+            pointer-events: none;
+        }
+        .top-left    { top: 42px; left: 42px;    border-right:0; border-bottom:0; border-radius:14px 0 0 0; }
+        .top-right   { top: 42px; right: 42px;   border-left:0;  border-bottom:0; border-radius:0 14px 0 0; }
+        .bottom-left { bottom: 42px; left: 42px; border-right:0; border-top:0;    border-radius:0 0 0 14px; }
+        .bottom-right{ bottom: 42px; right: 42px;border-left:0;  border-top:0;    border-radius:0 0 14px 0; }
+
+        /* ============================================================
+           HEADER IDENTITY
+        ============================================================ */
+        .identity-header {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+        .company-logo {
+            height: 52px; object-fit: contain;
+            display: block; margin: 0 auto 6px;
+        }
+        .brand-name {
+            font-family: Arial, sans-serif;
+            font-size: 22px; font-weight: 900;
+            letter-spacing: 5px; text-transform: uppercase; color: #0e1e3d;
+        }
+        .brand-meta {
+            font-family: Arial, sans-serif;
+            font-size: 9.5px; text-transform: uppercase;
+            letter-spacing: 2px; color: #1a56db; font-weight: bold;
+            margin-top: 2px;
+        }
+
+        /* ============================================================
+           TITLE BLOCK
+        ============================================================ */
+        .doc-title-block {
+            text-align: center;
+            margin: 14px 0 16px;
+        }
+        .doc-title {
+            font-size: 21px; font-weight: bold;
+            color: #0e1e3d; letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .doc-underline {
+            width: 380px; height: 1.5px;
+            background: linear-gradient(to right, transparent, #1a56db, transparent);
+            margin: 5px auto 8px;
+        }
+        .doc-ref {
+            font-size: 10px; font-family: Arial, sans-serif;
+            font-weight: bold; letter-spacing: 1px; color: #555;
+        }
+
+        /* ============================================================
+           LEGAL CONTENT
+        ============================================================ */
+        .legal-content {
+            font-size: 15.5px;
+            line-height: 1.62;
+            text-align: justify;
+            color: #1a1a1a;
+        }
+        .legal-content p { margin-bottom: 0; }
+
+        .highlight-data {
+            font-weight: bold;
+            text-decoration: underline;
+            color: #0e1e3d;
+        }
+
+        .guarantee-box {
+            margin: 14px auto;
+            width: 88%;
+            padding: 16px 22px;
+            border: 1.5px solid #1a3a6b;
+            background: rgba(26, 86, 219, 0.03);
+            font-style: italic;
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+            color: #0e1e3d;
+            line-height: 1.55;
+        }
+
+        /* ============================================================
+           EXECUTION AREA
+        ============================================================ */
+        .execution-area {
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0 55px;
+        }
+
+        .signatory-block {
+            width: 280px;
+            text-align: center;
+        }
+        .signature-space {
+            border-bottom: 1.5px solid #222;
+            height: 62px;
+            margin-bottom: 8px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 4px;
+        }
+        /* Replace src with your signature image URL */
+        .signature-graphic {
+            max-height: 56px;
+            max-width: 220px;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+        }
+        .signatory-name {
+            font-size: 13px; font-weight: bold; color: #0e1e3d;
+        }
+        .signatory-title {
+            font-size: 9.5px; font-family: Arial, sans-serif;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            color: #1a56db; font-weight: bold; margin-top: 2px;
+        }
+
+        .seal-block {
+            width: 140px;
+            text-align: center;
+        }
+        /* Replace src with your seal image URL */
+        .official-seal {
+            width: 110px; height: 95px;
+            object-fit: contain;
+            display: block; margin: 0 auto;
+        }
+        .seal-caption {
+            font-size: 8.5px; font-family: Arial, sans-serif;
+            text-transform: uppercase; letter-spacing: 1px;
+            color: #888; margin-top: 4px;
+        }
+
+        /* ============================================================
+           FINE PRINT
+        ============================================================ */
+        .fine-legal-print {
+            position: absolute;
+            bottom: 68px; left: 110px; right: 110px;
+            text-align: center;
+            font-size: 8.5px; color: #999;
+            font-family: Arial, sans-serif; letter-spacing: 0.3px;
+        }
+
+        /* ============================================================
+           PRINT
+        ============================================================ */
+        @media print {
+            body { background: white; padding: 0; }
+            .toolbar, #verificationModal { display: none !important; }
+            .paper { box-shadow: none; border: none; width: 100%; height: auto; display: block !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- =====================================================
+         SECURE ACCESS PORTAL
+    ===================================================== -->
+    <div id="verificationModal">
+        <div class="portal-box">
+            <div class="portal-logo-wrap">
+                <!-- Replace src with your logo URL -->
+                <img src="image/logo.png" alt="TIPFIN Loans" class="portal-logo-img"
+                     onerror="this.style.display='none';">
+                <div class="portal-brand-name">TIPFIN</div>
+                <div class="portal-brand-sub">LOANS (PTY) LTD</div>
+            </div>
+            <div class="portal-title"><i class="fas fa-shield-alt"></i> &nbsp;SECURE SERVER ACCESS</div>
+            <div class="portal-sub">VERIFYING LOAN DISBURSEMENT AUTHORITY</div>
+            <form id="authForm">
+                <input type="email" id="emailInput" class="portal-input"
+                       placeholder="Registered Email Address" required autocomplete="email">
+                <button type="submit" class="portal-btn" id="authBtn">
+                    <i class="fas fa-unlock-alt"></i> &nbsp;UNLOCK LOAN INSTRUMENT
+                </button>
+            </form>
+            <p id="errMsg"></p>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         TOOLBAR
+    ===================================================== -->
+    <div class="toolbar" id="docToolbar">
+        <div class="toolbar-info">
+            <i class="fas fa-shield-alt"></i> &nbsp;ENCRYPTED LOAN INSTRUMENT &nbsp;|&nbsp; TF/LA-2026
+        </div>
+        <div>
+            <button class="toolbar-btn" onclick="window.print()">
+                <i class="fas fa-print"></i> Print
+            </button>
+            <button class="toolbar-btn" onclick="downloadPDF()">
+                <i class="fas fa-file-pdf"></i> Save PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         LANDSCAPE CERTIFICATE PAPER
+    ===================================================== -->
+    <div class="paper" id="legalPaper">
+
+        <!-- Ornate Border -->
+        <div class="ornate-border"></div>
+        <div class="inner-frame"></div>
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+
+        <!-- Header -->
+        <div class="identity-header">
+            <!-- Replace src with your logo URL -->
+            <img src="image/logo.png" alt="TIPFIN Loans" class="company-logo"
+                 onerror="this.style.display='none';">
+            <div class="brand-name">TIPFIN LOANS (PTY) LTD</div>
+            <div class="brand-meta">REGISTERED CREDIT PROVIDER &nbsp;|&nbsp; NCR REG: NCRCP22024 &nbsp;|&nbsp; REG: 2024/669652/07</div>
+        </div>
+
+        <!-- Title -->
+        <div class="doc-title-block">
+            <div class="doc-title">IRREVOCABLE LOAN APPROVAL &amp; DISBURSEMENT CERTIFICATE</div>
+            <div class="doc-underline"></div>
+            <div class="doc-ref">
+                REF: TF/LA-2026 &nbsp;|&nbsp; AUTHENTICATED: <span id="currentDate">…</span>
+            </div>
+        </div>
+
+        <!-- Legal Content -->
+        <div class="legal-content">
+            <p>
+                In recognition of the credit application submitted by
+                <span class="highlight-data" id="nameTarget">…</span>,
+                this instrument serves as an official and irrevocable approval issued by the credit division of
+                <strong>TIPFIN Loans (Pty) Ltd</strong>, a registered credit provider operating under the
+                National Credit Act (NCA) of the Republic of South Africa.
+            </p>
+
+            <p style="margin-top: 11px;">
+                We hereby certify that the approved loan amount of
+                <span class="highlight-data" id="amountTarget">…</span>
+                has been cleared, ring-fenced, and held in trust for immediate disbursement upon completion of
+                the final activation requirement. This approval is legally binding and cannot be rescinded once
+                the activation fee of <strong>R269.00</strong> has been received and processed.
+            </p>
+
+            <div class="guarantee-box">
+                "TIPFIN Loans (Pty) Ltd formally guarantees the release of the aforementioned approved funds
+                to the applicant's verified bank account within <strong>44 minutes</strong> of the
+                final activation and risk-management compliance verification."
+            </div>
+
+            <p>
+                This document is executed under the authority of the National Credit Act and confirms that the
+                applicant has met the primary financial criteria for capital release. The approved loan carries
+                an interest rate of <strong>5% per annum</strong> and is subject to the terms and conditions
+                of the signed Master Loan Agreement. TIPFIN Loans is committed to responsible lending and
+                assisting clients in accessing fair financial solutions.
+            </p>
+        </div>
+
+        <!-- Execution Area -->
+        <div class="execution-area">
+
+            <!-- MD Signature block -->
+            <div class="signatory-block">
+                <div class="signature-space">
+                    <!-- Replace src with your signature image URL -->
+                    <img src="image/signature.png" alt="MD Signature" class="signature-graphic"
+                         onerror="this.style.display='none';">
+                </div>
+                <div class="signatory-name">Sipho Thabethe</div>
+                <div class="signatory-title">Managing Director, TIPFIN Loans</div>
+            </div>
+
+            <!-- Seal block -->
+            <div class="seal-block">
+                <!-- Replace src with your seal image URL -->
+                <img src="image/seal2.png" alt="Official Seal" class="official-seal"
+                     onerror="this.style.opacity='0';">
+                <div class="seal-caption">Corporate Security Seal</div>
+            </div>
+
+        </div>
+
+        <!-- Fine Print -->
+        <div class="fine-legal-print">
+            Official Legal Instrument. TIPFIN Loans (Pty) Ltd is a Licensed Credit Provider (NCR Reg: NCRCP22024 | Company Reg: 2024/669652/07).
+            20 Everest Street CE2, Vanderbijlpark, 1911 &nbsp;·&nbsp; info.tipfin@aol.com &nbsp;·&nbsp; +27 68 529 9179.
+            Terms and conditions apply as per the signed Master Loan Agreement.
+        </div>
+
+    </div><!-- /paper -->
+
+    <script>
+        /* ============================================================
+           BASEROW CONFIGURATION — TIPFIN TABLE
+        ============================================================ */
+        const BASEROW_TOKEN  = 'LG6hnTBxgBG78FueElsSwpHRd4Wep1oL';
+        const TABLE_ID       = '936442';
+        const EMAIL_FIELD    = 'field_8136510';   // Email field
+        const FNAME_FIELD    = 'field_8136507';   // name
+        const LNAME_FIELD    = 'field_8136508';   // lastname
+        const AMOUNT_FIELD   = 'field_8136509';   // loanAmount
+
+        /* ============================================================
+           FETCH FROM BASEROW
+           Searches all rows where email contains the entered value,
+           then picks the best match (exact email, most data).
+        ============================================================ */
+        async function fetchBaserow(email) {
+            const url = `https://api.baserow.io/api/database/rows/table/${TABLE_ID}/`
+                      + `?filter__${EMAIL_FIELD}__contains=${encodeURIComponent(email.trim())}`
+                      + `&size=50`;
+            try {
+                const res  = await fetch(url, { headers: { 'Authorization': `Token ${BASEROW_TOKEN}` } });
+                const data = await res.json();
+                if (!data.results || data.results.length === 0) return null;
+
+                /* Filter: email must actually contain the search term */
+                const matches = data.results.filter(r =>
+                    (r[EMAIL_FIELD] || '').toString().toLowerCase()
+                        .includes(email.trim().toLowerCase())
+                );
+                if (!matches.length) return null;
+
+                /* Prefer exact email match, otherwise take first */
+                const exact = matches.find(r =>
+                    (r[EMAIL_FIELD] || '').toString().toLowerCase().trim()
+                        === email.trim().toLowerCase()
+                );
+                return exact || matches[0];
+            } catch (e) {
+                return null;
+            }
+        }
+
+        /* ============================================================
+           AUTH FORM SUBMIT
+        ============================================================ */
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email  = document.getElementById('emailInput').value.trim();
+            const btn    = document.getElementById('authBtn');
+            const errEl  = document.getElementById('errMsg');
+
+            btn.textContent = 'AUTHENTICATING…';
+            btn.disabled    = true;
+            errEl.style.display = 'none';
+
+            const record = await fetchBaserow(email);
+
+            if (record) {
+                const fName  = (record[FNAME_FIELD]  || '').toString().trim();
+                const lName  = (record[LNAME_FIELD]  || '').toString().trim();
+                const fullName = [fName, lName].filter(Boolean).join(' ').toUpperCase() || 'THE APPLICANT';
+
+                const rawAmt = (record[AMOUNT_FIELD] || '0').toString().replace(/[^0-9.]/g, '');
+                const amount = parseFloat(rawAmt) || 0;
+                const amtStr = 'R ' + amount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                const dateStr = new Date().toLocaleDateString('en-ZA', {
+                    day: 'numeric', month: 'long', year: 'numeric'
+                }).toUpperCase();
+
+                document.getElementById('nameTarget').textContent   = fullName;
+                document.getElementById('amountTarget').textContent = amtStr;
+                document.getElementById('currentDate').textContent  = dateStr;
+
+                document.getElementById('verificationModal').style.display = 'none';
+                document.getElementById('docToolbar').style.display  = 'flex';
+                document.getElementById('legalPaper').style.display  = 'block';
+            } else {
+                errEl.textContent    = 'ACCESS DENIED: CREDENTIALS NOT FOUND IN OUR SYSTEM.';
+                errEl.style.display  = 'block';
+                btn.textContent      = 'UNLOCK LOAN INSTRUMENT';
+                btn.disabled         = false;
+            }
+        });
+
+        /* ============================================================
+           PDF DOWNLOAD — Landscape A4
+        ============================================================ */
+        async function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const element   = document.getElementById('legalPaper');
+
+            const canvas = await html2canvas(element, {
+                scale: 3,
+                useCORS: true,
+                allowTaint: true,
+                logging: false,
+                backgroundColor: '#ffffff'
+            });
+
+            const pdf = new jsPDF('l', 'mm', 'a4'); // landscape
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 297, 210);
+
+            const nameEl = document.getElementById('nameTarget');
+            const name   = (nameEl ? nameEl.textContent : 'Applicant').replace(/\s+/g, '_');
+            pdf.save(`TIPFIN_LoanCertificate_${name}.pdf`);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIPFIN PAY — Secure Payout Portal</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#1a3a6b;
+  --navy2:#0f2347;
+  --blue:#1a56db;
+  --gold:#f59e0b;
+  --red:#dc2626;
+  --green:#16a34a;
+  --light:#f0f5fc;
+  --border:#c0cfe8;
+  --text:#1e293b;
+  --sub:#64748b;
+}
+body{font-family:Arial,sans-serif;background:#d6d6d6;min-height:100vh;}
+
+/* ── TOP NAV ── */
+.topnav{
+  background:linear-gradient(90deg,var(--navy2),var(--navy));
+  color:#fff;padding:0 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;position:sticky;top:0;z-index:900;
+  box-shadow:0 3px 12px rgba(0,0,0,0.35);
+}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand-logo{
+  width:42px;height:42px;border-radius:8px;
+  background:linear-gradient(135deg,#fff 0%,#e0eaff 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:900;color:var(--navy);letter-spacing:0px;
+  border:2px solid rgba(255,255,255,0.3);
+}
+.brand-name{font-size:22px;font-weight:900;letter-spacing:5px;}
+.brand-sub{font-size:9px;letter-spacing:3px;color:#a0bbf0;margin-top:1px;}
+.nav-right{display:flex;align-items:center;gap:18px;font-size:13px;}
+.nav-pill{background:rgba(255,255,255,0.12);padding:5px 14px;border-radius:20px;font-size:12px;}
+.nav-badge{background:#16a34a;color:#fff;font-size:10px;font-weight:bold;padding:2px 8px;border-radius:10px;letter-spacing:0.5px;}
+
+/* ── LAYOUT ── */
+.container{max-width:1200px;margin:28px auto;padding:0 18px;display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+@media(max-width:900px){.container{grid-template-columns:1fr;}}
+
+/* ── PANELS ── */
+.panel{background:#fff;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,0.12);overflow:hidden;}
+.panel-header{
+  background:linear-gradient(135deg,var(--navy),var(--blue));
+  padding:16px 22px;color:#fff;
+  display:flex;align-items:center;gap:10px;
+}
+.panel-header h2{font-size:15px;font-weight:bold;letter-spacing:0.5px;}
+.panel-header .icon{font-size:18px;opacity:0.85;}
+.panel-body{padding:22px;}
+
+/* ── SENDER BOX ── */
+.sender-box{
+  background:linear-gradient(135deg,var(--light),#dde8f5);
+  border:1.5px solid var(--border);
+  border-left:5px solid var(--navy);
+  border-radius:10px;padding:14px 18px;
+  margin-bottom:20px;display:flex;align-items:center;gap:16px;
+}
+.sender-logo{flex-shrink:0;}
+.sender-details{font-size:12px;color:var(--sub);}
+.sender-details strong{display:block;font-size:14px;color:var(--navy);margin-bottom:2px;}
+
+/* ── FORM ── */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+@media(max-width:600px){.form-row{grid-template-columns:1fr;}}
+.form-group{margin-bottom:14px;}
+.form-group.full{grid-column:1/-1;}
+label{display:block;font-weight:bold;font-size:12px;color:var(--text);margin-bottom:6px;letter-spacing:0.3px;}
+label span.req{color:var(--red);}
+.form-input,.form-select{
+  width:100%;padding:11px 13px;
+  border:2px solid var(--border);border-radius:8px;
+  font-size:14px;color:var(--text);background:#fff;
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.form-input:focus,.form-select:focus{
+  outline:none;border-color:var(--navy);
+  box-shadow:0 0 0 3px rgba(26,58,107,0.1);
+}
+.form-select{cursor:pointer;}
+.input-prefix{position:relative;}
+.input-prefix span{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  font-size:14px;font-weight:bold;color:var(--navy);
+}
+.input-prefix .form-input{padding-left:28px;}
+
+.bank-select-wrap{position:relative;}
+.bank-preview{
+  display:flex;align-items:center;gap:10px;
+  margin-top:8px;padding:8px 12px;
+  background:var(--light);border:1px solid var(--border);
+  border-radius:8px;font-size:12px;color:var(--sub);
+  min-height:40px;
+}
+.bank-preview.hidden{display:none;}
+
+/* ── SUBMIT BTN ── */
+.submit-btn{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,var(--navy),var(--blue));
+  color:#fff;border:none;border-radius:10px;
+  font-size:15px;font-weight:bold;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  transition:opacity 0.2s,transform 0.1s;
+  letter-spacing:0.5px;margin-top:6px;
+}
+.submit-btn:hover{opacity:0.93;transform:translateY(-1px);}
+.submit-btn:active{transform:translateY(0);}
+.submit-btn:disabled{background:#aaa;cursor:default;transform:none;}
+
+/* ── PROGRESS OVERLAY ── */
+.progress-overlay{
+  position:fixed;inset:0;
+  background:rgba(8,18,45,0.88);
+  display:none;flex-direction:column;
+  justify-content:center;align-items:center;
+  z-index:3000;padding:20px;
+}
+.progress-card{
+  background:#fff;border-radius:20px;
+  padding:38px 40px;max-width:500px;width:100%;
+  text-align:center;box-shadow:0 30px 80px rgba(0,0,0,0.5);
+}
+.prog-logo{margin-bottom:16px;}
+.prog-company{font-size:24px;font-weight:900;color:var(--navy);letter-spacing:5px;}
+.prog-sub{font-size:10px;color:var(--sub);letter-spacing:2px;}
+.prog-title{font-size:18px;font-weight:bold;color:var(--navy);margin:16px 0 4px;}
+.prog-amount{font-size:28px;font-weight:900;color:var(--green);margin-bottom:4px;}
+.prog-recip{font-size:13px;color:var(--sub);margin-bottom:20px;}
+.prog-bar-wrap{
+  background:#e8eef8;border-radius:100px;
+  height:16px;overflow:hidden;margin-bottom:8px;
+  border:1.5px solid var(--border);
+}
+.prog-bar{
+  height:100%;
+  background:linear-gradient(90deg,#16a34a,#22c55e);
+  border-radius:100px;width:0%;
+  transition:width 0.25s ease;
+}
+.prog-pct{font-size:13px;font-weight:bold;color:var(--navy);margin-bottom:6px;}
+.prog-status{font-size:12px;color:var(--sub);min-height:18px;}
+.prog-transfer-detail{
+  display:flex;justify-content:space-between;
+  background:var(--light);border:1px solid var(--border);
+  border-radius:10px;padding:12px 16px;margin:16px 0;
+  font-size:12px;
+}
+.prog-td-item{text-align:center;}
+.prog-td-item .label{color:var(--sub);margin-bottom:3px;}
+.prog-td-item .value{font-weight:bold;color:var(--navy);font-size:13px;}
+
+/* ── AUTH MODAL ── */
+.auth-modal{
+  position:fixed;inset:0;
+  background:rgba(8,18,45,0.9);
+  display:none;flex-direction:column;
+  justify-content:center;align-items:center;
+  z-index:5000;padding:20px;
+}
+.auth-card{
+  background:#fff;border-radius:18px;
+  max-width:520px;width:100%;
+  box-shadow:0 30px 80px rgba(0,0,0,0.55);
+  overflow:hidden;
+}
+.auth-card-header{
+  background:linear-gradient(135deg,#7f1d1d,var(--red));
+  padding:22px 28px;color:#fff;text-align:center;
+}
+.auth-card-header .warning-icon{font-size:38px;margin-bottom:8px;}
+.auth-card-header h2{font-size:20px;font-weight:bold;margin-bottom:4px;}
+.auth-card-header p{font-size:12px;opacity:0.85;letter-spacing:0.5px;}
+.auth-card-body{padding:28px 30px;}
+.risk-score-wrap{
+  display:flex;align-items:center;gap:18px;
+  background:#fff5f5;border:1.5px solid #fecaca;
+  border-radius:10px;padding:14px 18px;margin-bottom:18px;
+}
+.risk-gauge{
+  flex-shrink:0;width:72px;height:72px;border-radius:50%;
+  background:conic-gradient(var(--red) 0% 28%, #fee2e2 28% 100%);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.risk-gauge::after{
+  content:'';position:absolute;inset:12px;
+  background:#fff5f5;border-radius:50%;
+}
+.risk-num{position:relative;z-index:1;font-size:16px;font-weight:900;color:var(--red);}
+.risk-info .risk-label{font-size:11px;font-weight:bold;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.risk-info p{font-size:12px;color:#7f1d1d;line-height:1.5;}
+.auth-detail-box{
+  background:var(--light);border:1px solid var(--border);
+  border-radius:10px;padding:14px 18px;margin-bottom:18px;
+}
+.auth-detail-row{
+  display:flex;justify-content:space-between;
+  padding:6px 0;border-bottom:1px dotted var(--border);
+  font-size:13px;
+}
+.auth-detail-row:last-child{border-bottom:none;}
+.auth-detail-row .k{color:var(--sub);}
+.auth-detail-row .v{font-weight:bold;color:var(--navy);}
+.auth-notice{
+  border:1.5px solid var(--navy);border-left:5px solid var(--navy);
+  background:var(--light);padding:12px 16px;
+  border-radius:8px;font-size:12.5px;
+  color:var(--text);line-height:1.6;margin-bottom:18px;
+}
+.auth-notice strong{color:var(--navy);}
+.auth-ref{
+  text-align:center;font-size:11px;color:var(--sub);
+  margin-bottom:16px;letter-spacing:0.5px;
+}
+.auth-btn-row{display:flex;gap:12px;}
+.auth-close-btn{
+  flex:1;padding:13px;background:#f1f5f9;
+  border:2px solid var(--border);color:var(--text);
+  border-radius:10px;font-size:14px;font-weight:bold;
+  cursor:pointer;transition:background 0.2s;
+}
+.auth-close-btn:hover{background:#e2e8f0;}
+.auth-contact-btn{
+  flex:2;padding:13px;
+  background:linear-gradient(135deg,var(--navy),var(--blue));
+  color:#fff;border:none;border-radius:10px;
+  font-size:14px;font-weight:bold;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+
+/* ── TRANSACTION TABLE ── */
+.tx-table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+thead th{
+  background:linear-gradient(135deg,var(--navy),var(--navy2));
+  color:#fff;padding:10px 10px;text-align:left;
+  font-size:11px;letter-spacing:0.3px;white-space:nowrap;
+}
+thead th:first-child{border-radius:8px 0 0 0;}
+thead th:last-child{border-radius:0 8px 0 0;}
+tbody tr{border-bottom:1px solid #eef2f8;transition:background 0.15s;}
+tbody tr:hover{background:#f8faff;}
+tbody td{padding:9px 10px;color:var(--text);vertical-align:middle;}
+.tx-bank-cell{display:flex;align-items:center;gap:7px;}
+.badge-status{
+  display:inline-block;padding:3px 9px;
+  border-radius:12px;font-size:10px;font-weight:bold;
+  letter-spacing:0.5px;
+}
+.badge-completed{background:#dcfce7;color:#15803d;}
+.badge-pending{background:#fef9c3;color:#92400e;}
+.badge-failed{background:#fee2e2;color:#991b1b;}
+.masked{font-family:'Courier New',monospace;letter-spacing:1px;color:var(--sub);}
+
+/* ── BANK LOGOS ── */
+.blogo{
+  width:32px;height:20px;border-radius:3px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:6.5px;font-weight:900;flex-shrink:0;letter-spacing:0px;
+  text-transform:uppercase;overflow:hidden;
+}
+.blogo-sm{width:24px;height:16px;font-size:5.5px;}
+/* Capitec */ .blogo-cap{background:#00a550;color:#fff;}
+/* FNB */     .blogo-fnb{background:#ff5f00;color:#fff;}
+/* Standard */ .blogo-std{background:#009de0;color:#fff;}
+/* Nedbank */ .blogo-ned{background:#007a4d;color:#fff;}
+/* ABSA */    .blogo-abs{background:#e00;color:#fff;}
+/* TymeBank */ .blogo-tym{background:#e91e8c;color:#fff;}
+/* African */  .blogo-afr{background:#ff6900;color:#fff;}
+/* Discovery */ .blogo-dis{background:#6d28d9;color:#fff;}
+/* Old Mutual */ .blogo-old{background:#008751;color:#fff;}
+/* Bidvest */  .blogo-bid{background:#003087;color:#fff;}
+
+/* Bank logo SVG/text combos */
+.blogo-cap svg,.blogo-fnb svg,.blogo-std svg{display:block;}
+
+/* ── SUMMARY STATS ── */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px;}
+.stat-box{
+  background:var(--light);border:1.5px solid var(--border);
+  border-radius:10px;padding:14px 16px;text-align:center;
+}
+.stat-box .s-val{font-size:20px;font-weight:900;color:var(--navy);}
+.stat-box .s-lbl{font-size:11px;color:var(--sub);margin-top:2px;}
+
+/* ── CURRENT TX PREVIEW ── */
+.current-tx{
+  background:linear-gradient(135deg,#f0fdf4,#dcfce7);
+  border:1.5px solid #86efac;border-radius:10px;
+  padding:14px 18px;margin-bottom:16px;
+  display:none;
+}
+.current-tx .ctx-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.current-tx .ctx-label{font-size:11px;font-weight:bold;color:#166534;text-transform:uppercase;letter-spacing:1px;}
+.current-tx .ctx-details{display:flex;gap:20px;flex-wrap:wrap;font-size:12px;color:#166534;}
+.current-tx .ctx-amt{font-size:22px;font-weight:900;color:#15803d;}
+
+/* ── SECURITY BAR ── */
+.sec-bar{
+  background:linear-gradient(135deg,var(--navy2),#0c1f42);
+  color:#fff;padding:8px 24px;
+  display:flex;align-items:center;justify-content:center;
+  gap:20px;font-size:11px;letter-spacing:0.5px;
+  flex-wrap:wrap;gap:12px;
+}
+.sec-bar span{display:flex;align-items:center;gap:5px;opacity:0.85;}
+.sec-bar i{color:#60a5fa;}
+
+/* ── FOOTER ── */
+.site-footer{
+  background:#1a2035;color:#8899aa;
+  text-align:center;padding:18px 24px;
+  font-size:11px;line-height:1.7;margin-top:8px;
+}
+.site-footer strong{color:#a0b4cc;}
+
+/* ── FULL-WIDTH HISTORY ── */
+.history-section{max-width:1200px;margin:0 auto 30px;padding:0 18px;}
+
+/* ── NOTIFICATION TOAST ── */
+.toast{
+  position:fixed;bottom:24px;right:24px;
+  background:var(--navy);color:#fff;
+  padding:13px 20px;border-radius:10px;
+  font-size:13px;font-weight:bold;
+  box-shadow:0 8px 24px rgba(0,0,0,0.3);
+  display:none;z-index:9000;
+  border-left:4px solid var(--gold);
+  max-width:320px;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     TOP NAV
+════════════════════════════════════════ -->
+<nav class="topnav">
+  <div class="brand">
+    <div class="brand-logo">TF</div>
+    <div>
+      <div class="brand-name">TIPFIN</div>
+      <div class="brand-sub">PAY · SECURE TRANSFER PORTAL</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-pill"><i class="fas fa-user-circle" style="margin-right:5px;"></i>FNB Business Account</div>
+    <div class="nav-badge"><i class="fas fa-circle" style="font-size:7px;margin-right:4px;"></i>LIVE</div>
+  </div>
+</nav>
+
+<!-- Security bar -->
+<div class="sec-bar">
+  <span><i class="fas fa-shield-alt"></i> 256-bit SSL Encrypted</span>
+  <span><i class="fas fa-university"></i> NCR Registered Credit Provider · NCRCP22024</span>
+  <span><i class="fas fa-lock"></i> PCI DSS Compliant</span>
+  <span><i class="fas fa-check-circle"></i> Reg: 2024/669652/07</span>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MAIN GRID
+════════════════════════════════════════ -->
+<div class="container">
+
+  <!-- ── LEFT: TRANSFER FORM ── -->
+  <div class="panel">
+    <div class="panel-header">
+      <i class="fas fa-paper-plane icon"></i>
+      <h2>Initiate Payout Transfer</h2>
+    </div>
+    <div class="panel-body">
+
+      <!-- Sender Info -->
+      <div class="sender-box">
+        <div class="sender-logo">
+          <div class="blogo blogo-fnb" style="width:48px;height:30px;font-size:12px;border-radius:6px;">FNB</div>
+        </div>
+        <div class="sender-details">
+          <strong>TIPFIN LOANS (PTY) LTD — FNB Business</strong>
+          Acc: ••••••••3847 &nbsp;|&nbsp; Branch: 250655 — Johannesburg Main<br>
+          Available Balance: <span style="color:#16a34a;font-weight:bold;">R 4,287,632.00</span>
+        </div>
+      </div>
+
+      <form id="transferForm" onsubmit="startTransfer(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fullName">Full Name <span class="req">*</span></label>
+            <input class="form-input" id="fullName" type="text" placeholder="e.g. Thabo Nkosi" required>
+          </div>
+          <div class="form-group">
+            <label for="idNumber">ID Number <span class="req">*</span></label>
+            <input class="form-input" id="idNumber" type="text" placeholder="13-digit SA ID" maxlength="13" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="accountNum">Account Number <span class="req">*</span></label>
+            <input class="form-input" id="accountNum" type="text" placeholder="Recipient account" required>
+          </div>
+          <div class="form-group">
+            <label for="bankSelect">Bank Name <span class="req">*</span></label>
+            <select class="form-select" id="bankSelect" onchange="updateBankPreview()" required>
+              <option value="">-- Select Bank --</option>
+              <option value="capitec">Capitec Bank</option>
+              <option value="fnb">First National Bank (FNB)</option>
+              <option value="standard">Standard Bank</option>
+              <option value="nedbank">Nedbank</option>
+              <option value="absa">ABSA</option>
+              <option value="tyme">TymeBank</option>
+              <option value="african">African Bank</option>
+              <option value="discovery">Discovery Bank</option>
+              <option value="oldmutual">Old Mutual</option>
+              <option value="bidvest">Bidvest Bank</option>
+            </select>
+            <div class="bank-preview hidden" id="bankPreview">
+              <span id="bankPreviewLogo"></span>
+              <span id="bankPreviewName" style="font-weight:bold;color:var(--navy);font-size:13px;"></span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="amount">Transfer Amount (ZAR) <span class="req">*</span></label>
+          <div class="input-prefix">
+            <span>R</span>
+            <input class="form-input" id="amount" type="number" placeholder="0.00" min="100" max="500000" step="0.01" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="reference">Payment Reference</label>
+          <input class="form-input" id="reference" type="text" placeholder="e.g. Loan Disbursement · TF-2025">
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <i class="fas fa-bolt"></i> Process Instant Transfer
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── RIGHT: QUICK STATS + RECENT ── -->
+  <div style="display:flex;flex-direction:column;gap:22px;">
+
+    <!-- Stats -->
+    <div class="panel">
+      <div class="panel-header">
+        <i class="fas fa-chart-bar icon"></i>
+        <h2>Today's Summary</h2>
+      </div>
+      <div class="panel-body">
+        <div class="stats-row">
+          <div class="stat-box">
+            <div class="s-val">47</div>
+            <div class="s-lbl">Transfers Sent</div>
+          </div>
+          <div class="stat-box">
+            <div class="s-val" style="color:#16a34a;">R 2.1M</div>
+            <div class="s-lbl">Total Paid Out</div>
+          </div>
+          <div class="stat-box">
+            <div class="s-val" style="color:#f59e0b;">3</div>
+            <div class="s-lbl">Pending Auth</div>
+          </div>
+        </div>
+
+        <!-- Current transfer preview (shown after form submit) -->
+        <div class="current-tx" id="currentTxBox">
+          <div class="ctx-row">
+            <span class="ctx-label"><i class="fas fa-spinner fa-spin" style="margin-right:5px;"></i>Processing Transfer</span>
+            <span class="ctx-amt" id="ctx-amt">R 0.00</span>
+          </div>
+          <div class="ctx-details">
+            <span><i class="fas fa-user" style="margin-right:4px;"></i><span id="ctx-name">—</span></span>
+            <span><i class="fas fa-university" style="margin-right:4px;"></i><span id="ctx-bank">—</span></span>
+            <span><i class="fas fa-credit-card" style="margin-right:4px;"></i>••••<span id="ctx-acc">0000</span></span>
+          </div>
+        </div>
+
+        <p style="font-size:12px;color:var(--sub);line-height:1.6;border-top:1px solid #e8eef8;padding-top:14px;margin-top:4px;">
+          <i class="fas fa-info-circle" style="color:var(--navy);margin-right:5px;"></i>
+          TIPFIN PAY processes all disbursements via <strong>FNB Business Banking</strong>. Transfers are subject to credit risk assessment and may require authorisation for high-risk profiles as per NCR guidelines.
+        </p>
+      </div>
+    </div>
+
+    <!-- Info Card -->
+    <div class="panel">
+      <div class="panel-header" style="background:linear-gradient(135deg,#065f46,#16a34a);">
+        <i class="fas fa-shield-check icon"></i>
+        <h2>Transfer Security</h2>
+      </div>
+      <div class="panel-body" style="font-size:12.5px;color:var(--text);line-height:1.7;">
+        <div style="display:flex;gap:10px;margin-bottom:10px;">
+          <i class="fas fa-check-circle" style="color:#16a34a;margin-top:3px;flex-shrink:0;"></i>
+          <span>All transfers are processed through <strong>SARB-regulated</strong> clearing channels.</span>
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:10px;">
+          <i class="fas fa-check-circle" style="color:#16a34a;margin-top:3px;flex-shrink:0;"></i>
+          <span>High-risk profiles may trigger an <strong>authorization hold</strong> pending manual review.</span>
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:10px;">
+          <i class="fas fa-check-circle" style="color:#16a34a;margin-top:3px;flex-shrink:0;"></i>
+          <span>Instant EFT via <strong>FNB Real-Time Payments</strong> — funds reflect within seconds.</span>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <i class="fas fa-check-circle" style="color:#16a34a;margin-top:3px;flex-shrink:0;"></i>
+          <span>All transactions are logged and audited per <strong>FICA regulations</strong>.</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TRANSACTION HISTORY — FULL WIDTH
+════════════════════════════════════════ -->
+<div class="history-section">
+  <div class="panel">
+    <div class="panel-header">
+      <i class="fas fa-history icon"></i>
+      <h2>Payout Transaction History — All Records</h2>
+      <span style="margin-left:auto;font-size:11px;opacity:0.75;">50 Records · FNB Business Account ••••3847</span>
+    </div>
+    <div class="panel-body" style="padding:14px;">
+      <div class="tx-table-wrap">
+        <table id="txTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Date &amp; Time</th>
+              <th>Ref No</th>
+              <th>Recipient Name</th>
+              <th>ID (masked)</th>
+              <th>Account (masked)</th>
+              <th>Bank</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="txBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+════════════════════════════════════════ -->
+<div class="site-footer">
+  <strong>TIPFIN LOANS (PTY) LTD</strong> — Registered Credit Provider &nbsp;·&nbsp; NCR: NCRCP22024 &nbsp;·&nbsp; Reg: 2024/669652/07<br>
+  20 Everest Street CE2, Vanderbijlpark, 1911 &nbsp;·&nbsp; info.tipfin@aol.com &nbsp;·&nbsp; Paying bank: First National Bank (FNB) Business Account<br>
+  <span style="font-size:10px;margin-top:4px;display:block;">This portal is for <strong style="color:#f0a040;">EDUCATIONAL PURPOSES ONLY</strong>. No real financial transactions are processed.</span>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PROGRESS OVERLAY
+════════════════════════════════════════ -->
+<div class="progress-overlay" id="progressOverlay">
+  <div class="progress-card">
+    <div class="prog-logo">
+      <div style="font-size:26px;font-weight:900;color:var(--navy);letter-spacing:5px;">TIPFIN</div>
+      <div style="font-size:9px;color:var(--sub);letter-spacing:3px;">PAY · SECURE TRANSFERS</div>
+    </div>
+    <div class="prog-title">Processing Instant Transfer</div>
+    <div class="prog-amount" id="progAmount">R 0.00</div>
+    <div class="prog-recip">
+      To: <strong id="progRecip">—</strong> &nbsp;·&nbsp;
+      <span id="progBankLogo" style="display:inline-flex;align-items:center;gap:4px;"></span>
+      &nbsp;Acc: ••••<span id="progAcc">0000</span>
+    </div>
+
+    <div class="prog-transfer-detail">
+      <div class="prog-td-item"><div class="label">From</div><div class="value">TIPFIN · FNB ••••3847</div></div>
+      <div class="prog-td-item"><div class="label">Channel</div><div class="value">RTC / Instant EFT</div></div>
+      <div class="prog-td-item"><div class="label">Ref</div><div class="value" id="progRef">TF-0000</div></div>
+    </div>
+
+    <div class="prog-bar-wrap"><div class="prog-bar" id="progBar"></div></div>
+    <div class="prog-pct" id="progPct">0%</div>
+    <div class="prog-status" id="progStatus">Connecting to FNB Real-Time Clearing...</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     AUTHORISATION MODAL
+════════════════════════════════════════ -->
+<div class="auth-modal" id="authModal">
+  <div class="auth-card">
+    <div class="auth-card-header">
+      <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
+      <h2>Transfer Suspended — Authorisation Required</h2>
+      <p>HIGH-RISK TRANSACTION FLAGGED · CREDIT RISK DIVISION</p>
+    </div>
+    <div class="auth-card-body">
+
+      <div class="risk-score-wrap">
+        <div class="risk-gauge"><span class="risk-num">28%</span></div>
+        <div class="risk-info">
+          <div class="risk-label"><i class="fas fa-exclamation-circle" style="margin-right:4px;"></i>Low Credit Score Detected</div>
+          <p>This recipient's credit profile scores below the minimum threshold (580). The transfer has been paused at 80% pending risk authorisation as required by NCR compliance policy.</p>
+        </div>
+      </div>
+
+      <div class="auth-detail-box">
+        <div class="auth-detail-row"><span class="k">Recipient</span><span class="v" id="authName">—</span></div>
+        <div class="auth-detail-row"><span class="k">ID Number</span><span class="v masked">••••••••••<span id="authId">0000</span></span></div>
+        <div class="auth-detail-row"><span class="k">Bank</span><span class="v" id="authBank">—</span></div>
+        <div class="auth-detail-row"><span class="k">Account</span><span class="v masked">••••••<span id="authAcc">0000</span></span></div>
+        <div class="auth-detail-row"><span class="k">Transfer Amount</span><span class="v" id="authAmount" style="color:#dc2626;">—</span></div>
+        <div class="auth-detail-row"><span class="k">Credit Score</span><span class="v" style="color:#dc2626;">282 / 1000 (Very Low)</span></div>
+        <div class="auth-detail-row"><span class="k">Risk Rating</span><span class="v" style="color:#dc2626;">HIGH RISK — Category 4</span></div>
+        <div class="auth-detail-row"><span class="k">Transfer Progress</span><span class="v" style="color:#f59e0b;">80% — SUSPENDED</span></div>
+        <div class="auth-detail-row"><span class="k">Auth Reference</span><span class="v" id="authRef">—</span></div>
+      </div>
+
+      <div class="auth-notice">
+        <strong><i class="fas fa-gavel" style="margin-right:6px;"></i>NCR Compliance Notice:</strong> In terms of the National Credit Act (NCA) and SARB Risk Management guidelines, all transfers to recipients with a credit score below 580 and a high-risk profile classification require a mandatory <strong>Authorisation Code</strong> to be issued by the TIPFIN Credit Risk Division before the transaction can be completed. Your transfer has been securely held at 80% in the clearing queue.
+        <br><br>
+        <strong>To complete this transfer</strong>, please contact the TIPFIN Credit Risk Authorisation Desk. An authorisation code will be issued to the account holder upon verification of identity and risk clearance.
+      </div>
+
+      <div class="auth-ref">
+        Case Reference: <strong id="authCaseRef">—</strong> &nbsp;·&nbsp; Logged: <strong id="authTime">—</strong>
+      </div>
+
+      <div class="auth-btn-row">
+        <button class="auth-close-btn" onclick="closeAuth()"><i class="fas fa-times" style="margin-right:5px;"></i>Cancel</button>
+        <button class="auth-contact-btn"><i class="fas fa-headset"></i> Contact Authorisation Desk</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
+<script>
+// ─────────────────────────────────────────
+// BANK DATA
+// ─────────────────────────────────────────
+const BANKS = {
+  capitec:   {name:'Capitec Bank',          cls:'blogo-cap', short:'CAP'},
+  fnb:       {name:'First National Bank',   cls:'blogo-fnb', short:'FNB'},
+  standard:  {name:'Standard Bank',         cls:'blogo-std', short:'STD'},
+  nedbank:   {name:'Nedbank',               cls:'blogo-ned', short:'NED'},
+  absa:      {name:'ABSA',                  cls:'blogo-abs', short:'ABS'},
+  tyme:      {name:'TymeBank',              cls:'blogo-tym', short:'TYM'},
+  african:   {name:'African Bank',          cls:'blogo-afr', short:'AFR'},
+  discovery: {name:'Discovery Bank',        cls:'blogo-dis', short:'DIS'},
+  oldmutual: {name:'Old Mutual Bank',       cls:'blogo-old', short:'OM'},
+  bidvest:   {name:'Bidvest Bank',          cls:'blogo-bid', short:'BID'},
+};
+const BANK_KEYS = Object.keys(BANKS);
+
+function bankLogoHTML(key, sm=false){
+  const b = BANKS[key];
+  if(!b) return '';
+  const sc = sm ? 'blogo-sm' : '';
+  return `<span class="blogo ${b.cls} ${sc}" title="${b.name}">${b.short}</span>`;
+}
+
+// ─────────────────────────────────────────
+// 50 TRANSACTIONS
+// ─────────────────────────────────────────
+const TX_DATA = [
+  {name:'Thabo Nkosi',         id:'9201145678901',acc:'6234987654',bank:'capitec',  amt:12500,  status:'completed', date:'2025-05-08 08:14'},
+  {name:'Nomsa Dlamini',       id:'8809234567890',acc:'7123456789',bank:'fnb',       amt:8750,   status:'completed', date:'2025-05-08 08:31'},
+  {name:'Sipho Zulu',          id:'9504178901234',acc:'5087654321',bank:'absa',      amt:22000,  status:'completed', date:'2025-05-08 08:45'},
+  {name:'Lindiwe Khumalo',     id:'9106095012345',acc:'4199876543',bank:'standard',  amt:5500,   status:'completed', date:'2025-05-08 09:02'},
+  {name:'Bongani Mthembu',     id:'8712166789012',acc:'3456789012',bank:'nedbank',   amt:18200,  status:'completed', date:'2025-05-08 09:17'},
+  {name:'Zanele Mokoena',      id:'9307228901234',acc:'2768901234',bank:'tyme',      amt:9800,   status:'completed', date:'2025-05-08 09:33'},
+  {name:'Lungelo Shabalala',   id:'9802148901234',acc:'1890123456',bank:'african',   amt:6750,   status:'completed', date:'2025-05-08 09:44'},
+  {name:'Precious Mahlangu',   id:'9605094567890',acc:'8901234567',bank:'discovery', amt:31000,  status:'completed', date:'2025-05-08 09:58'},
+  {name:'Sibusiso Ntuli',      id:'8810176890123',acc:'9234567890',bank:'oldmutual', amt:14500,  status:'completed', date:'2025-05-08 10:12'},
+  {name:'Ayanda Mnguni',       id:'9003153456789',acc:'0345678901',bank:'bidvest',   amt:7200,   status:'completed', date:'2025-05-08 10:29'},
+  {name:'Nokwanda Sithole',    id:'9409230123456',acc:'1456789012',bank:'capitec',   amt:25500,  status:'completed', date:'2025-05-08 10:41'},
+  {name:'Mduduzi Cele',        id:'8807135678901',acc:'2567890123',bank:'fnb',       amt:11000,  status:'completed', date:'2025-05-08 10:55'},
+  {name:'Thandeka Mkhize',     id:'9204222345678',acc:'3678901234',bank:'standard',  amt:8400,   status:'completed', date:'2025-05-08 11:08'},
+  {name:'Wiseman Buthelezi',   id:'9601180901234',acc:'4789012345',bank:'absa',      amt:19750,  status:'completed', date:'2025-05-08 11:22'},
+  {name:'Gugulethu Nxumalo',   id:'9712250678901',acc:'5890123456',bank:'nedbank',   amt:5000,   status:'completed', date:'2025-05-08 11:36'},
+  {name:'Sanele Hadebe',       id:'8906184234567',acc:'6901234567',bank:'tyme',      amt:42000,  status:'completed', date:'2025-05-08 11:50'},
+  {name:'Ntombifikile Dube',   id:'9110193456789',acc:'7012345678',bank:'african',   amt:7850,   status:'completed', date:'2025-05-08 12:03'},
+  {name:'Phiwayinkosi Nkosi',  id:'8802123890123',acc:'8123456789',bank:'discovery', amt:13200,  status:'pending',   date:'2025-05-08 12:18'},
+  {name:'Nomcebo Zwane',       id:'9307184512345',acc:'9234567890',bank:'oldmutual', amt:6300,   status:'completed', date:'2025-05-08 12:29'},
+  {name:'Sifiso Mthethwa',     id:'9504251234567',acc:'0345678901',bank:'bidvest',   amt:28000,  status:'completed', date:'2025-05-08 12:43'},
+  {name:'Hlengiwe Msweli',     id:'9808154678901',acc:'1456789023',bank:'capitec',   amt:9100,   status:'completed', date:'2025-05-08 12:57'},
+  {name:'Dumisani Kubheka',    id:'8711115234567',acc:'2567890134',bank:'fnb',       amt:16500,  status:'completed', date:'2025-05-08 13:11'},
+  {name:'Nomvula Mhlongo',     id:'9206176890123',acc:'3678901245',bank:'standard',  amt:7700,   status:'completed', date:'2025-05-08 13:24'},
+  {name:'Nhlanhla Mkhwanazi',  id:'9402134456789',acc:'4789012356',bank:'absa',      amt:22500,  status:'completed', date:'2025-05-08 13:38'},
+  {name:'Khanyisile Mbatha',   id:'9609090012345',acc:'5890123467',bank:'nedbank',   amt:11800,  status:'completed', date:'2025-05-08 13:51'},
+  {name:'Sandile Ngcobo',      id:'8805128678901',acc:'6901234578',bank:'tyme',      amt:35000,  status:'completed', date:'2025-05-08 14:05'},
+  {name:'Babalwa Vilakazi',    id:'9107172234567',acc:'7012345689',bank:'african',   amt:8950,   status:'completed', date:'2025-05-08 14:19'},
+  {name:'Mthokozisi Shezi',    id:'9303194890123',acc:'8123456790',bank:'discovery', amt:15600,  status:'pending',   date:'2025-05-08 14:33'},
+  {name:'Nokukhanya Shabalala',id:'9506161456789',acc:'9234567801',bank:'oldmutual', amt:6100,   status:'completed', date:'2025-05-08 14:47'},
+  {name:'Zithulele Mntambo',   id:'8904182012345',acc:'0345678912',bank:'bidvest',   amt:27500,  status:'completed', date:'2025-05-08 15:01'},
+  {name:'Hlobisile Nkwanyana', id:'9710254568901',acc:'1456789023',bank:'capitec',   amt:10200,  status:'completed', date:'2025-05-08 15:15'},
+  {name:'Mpendulo Zondo',      id:'8812174224567',acc:'2567890134',bank:'fnb',       amt:18700,  status:'completed', date:'2025-05-08 15:28'},
+  {name:'Nelisiwe Buthelezi',  id:'9209025880123',acc:'3678901245',bank:'standard',  amt:7100,   status:'completed', date:'2025-05-08 15:42'},
+  {name:'Thandolwethu Dube',   id:'9405164436789',acc:'4789012356',bank:'absa',      amt:24000,  status:'completed', date:'2025-05-08 15:56'},
+  {name:'Nozipho Mthembu',     id:'9611202992345',acc:'5890123467',bank:'nedbank',   amt:13400,  status:'completed', date:'2025-05-08 16:10'},
+  {name:'Lungisani Ndlela',    id:'8708135648901',acc:'6901234578',bank:'tyme',      amt:9300,   status:'completed', date:'2025-05-08 16:24'},
+  {name:'Bhekani Zungu',       id:'9102190204567',acc:'7012345689',bank:'african',   amt:46000,  status:'completed', date:'2025-05-08 16:37'},
+  {name:'Ntombizethu Gumede',  id:'9308195860123',acc:'8123456790',bank:'discovery', amt:8200,   status:'completed', date:'2025-05-08 16:51'},
+  {name:'Sibonelo Mkhize',     id:'9510234416789',acc:'9234567801',bank:'oldmutual', amt:17800,  status:'completed', date:'2025-05-08 17:04'},
+  {name:'Duduzile Cele',       id:'8906228972345',acc:'0345678912',bank:'bidvest',   amt:5800,   status:'completed', date:'2025-05-08 17:18'},
+  {name:'Mlungisi Hadebe',     id:'9703106128901',acc:'1456789023',bank:'capitec',   amt:33500,  status:'completed', date:'2025-05-08 17:31'},
+  {name:'Simangele Ntuli',     id:'8812254784567',acc:'2567890134',bank:'fnb',       amt:12100,  status:'completed', date:'2025-05-08 17:45'},
+  {name:'Nkosinathi Mahlangu', id:'9106134440123',acc:'3678901245',bank:'standard',  amt:9700,   status:'completed', date:'2025-05-08 17:58'},
+  {name:'Phindile Khumalo',    id:'9304155096789',acc:'4789012356',bank:'absa',      amt:21000,  status:'pending',   date:'2025-05-08 18:12'},
+  {name:'Mxolisi Mhlongo',     id:'8810185152345',acc:'5890123467',bank:'nedbank',   amt:7650,   status:'completed', date:'2025-05-08 18:25'},
+  {name:'Ntsikelelo Sithole',  id:'9208115808901',acc:'6901234578',bank:'tyme',      amt:15200,  status:'completed', date:'2025-05-08 18:39'},
+  {name:'Nomalanga Msweli',    id:'9412254364567',acc:'7012345689',bank:'african',   amt:8800,   status:'completed', date:'2025-05-08 18:52'},
+  {name:'Tholakele Ngubane',   id:'8706214020123',acc:'8123456790',bank:'discovery', amt:29500,  status:'completed', date:'2025-05-08 19:06'},
+  {name:'Siyabonga Majola',    id:'9605182576789',acc:'9234567801',bank:'oldmutual', amt:11500,  status:'completed', date:'2025-05-08 19:19'},
+  {name:'Nokuthula Nzimande',  id:'9809231032345',acc:'0345678912',bank:'bidvest',   amt:6900,   status:'completed', date:'2025-05-08 19:33'},
+  {name:'Zakhele Mntambo',     id:'9001104688901',acc:'1456789123',bank:'capitec',   amt:38000,  status:'completed', date:'2025-05-08 19:47'},
+];
+
+// ─────────────────────────────────────────
+// RENDER TRANSACTION TABLE
+// ─────────────────────────────────────────
+function renderTable(){
+  const tbody = document.getElementById('txBody');
+  tbody.innerHTML = '';
+  TX_DATA.forEach((tx,i)=>{
+    const b = BANKS[tx.bank];
+    const accMask = '••••••' + tx.acc.slice(-4);
+    const idMask  = '•••••••••' + tx.id.slice(-4);
+    const amtFmt  = 'R '+tx.amt.toLocaleString('en-ZA',{minimumFractionDigits:2});
+    const refNo   = 'TF-'+(20000+i+1);
+    const statusClass = tx.status==='completed'?'badge-completed':tx.status==='pending'?'badge-pending':'badge-failed';
+    const statusLabel = tx.status.charAt(0).toUpperCase()+tx.status.slice(1);
+    tbody.innerHTML += `<tr>
+      <td style="color:var(--sub);font-weight:bold;">${i+1}</td>
+      <td style="white-space:nowrap;font-size:11px;">${tx.date}</td>
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:var(--navy);">${refNo}</td>
+      <td><strong>${tx.name}</strong></td>
+      <td class="masked">${idMask}</td>
+      <td class="masked">${accMask}</td>
+      <td>
+        <div class="tx-bank-cell">
+          ${bankLogoHTML(tx.bank, true)}
+          <span style="font-size:11px;">${b.name}</span>
+        </div>
+      </td>
+      <td style="font-weight:bold;color:var(--navy);">${amtFmt}</td>
+      <td><span class="badge-status ${statusClass}">${statusLabel}</span></td>
+    </tr>`;
+  });
+}
+
+// ─────────────────────────────────────────
+// BANK PREVIEW
+// ─────────────────────────────────────────
+function updateBankPreview(){
+  const key = document.getElementById('bankSelect').value;
+  const preview = document.getElementById('bankPreview');
+  if(!key){preview.classList.add('hidden');return;}
+  const b = BANKS[key];
+  document.getElementById('bankPreviewLogo').innerHTML = bankLogoHTML(key);
+  document.getElementById('bankPreviewName').textContent = b.name;
+  preview.classList.remove('hidden');
+}
+
+// ─────────────────────────────────────────
+// TRANSFER FLOW
+// ─────────────────────────────────────────
+let transferAborted = false;
+
+function startTransfer(e){
+  e.preventDefault();
+  const name    = document.getElementById('fullName').value.trim();
+  const idNum   = document.getElementById('idNumber').value.trim();
+  const accNum  = document.getElementById('accountNum').value.trim();
+  const bankKey = document.getElementById('bankSelect').value;
+  const amount  = parseFloat(document.getElementById('amount').value);
+  const ref     = document.getElementById('reference').value.trim() || ('TF-LOAN-'+Date.now().toString().slice(-6));
+
+  if(!name||!idNum||!accNum||!bankKey||!amount){showToast('Please fill all required fields.');return;}
+  if(idNum.length<9){showToast('Please enter a valid ID number.');return;}
+  if(accNum.length<6){showToast('Please enter a valid account number.');return;}
+
+  const b = BANKS[bankKey];
+  const acc4 = accNum.slice(-4);
+  const id4  = idNum.slice(-4);
+  const amtFmt = 'R '+amount.toLocaleString('en-ZA',{minimumFractionDigits:2});
+  const refCode = 'TF-'+Math.floor(Math.random()*900000+100000);
+  const caseRef = 'CRD-AUTH-'+Math.floor(Math.random()*9000000+1000000);
+
+  // Update current TX preview
+  document.getElementById('ctx-amt').textContent = amtFmt;
+  document.getElementById('ctx-name').textContent = name;
+  document.getElementById('ctx-bank').textContent = b.name;
+  document.getElementById('ctx-acc').textContent = acc4;
+  document.getElementById('currentTxBox').style.display='block';
+
+  // Setup progress overlay
+  document.getElementById('progAmount').textContent = amtFmt;
+  document.getElementById('progRecip').textContent = name;
+  document.getElementById('progBankLogo').innerHTML = bankLogoHTML(bankKey, true)+' '+b.name;
+  document.getElementById('progAcc').textContent = acc4;
+  document.getElementById('progRef').textContent = refCode;
+
+  // Setup auth modal
+  document.getElementById('authName').textContent = name;
+  document.getElementById('authId').textContent = id4;
+  document.getElementById('authBank').textContent = b.name;
+  document.getElementById('authAcc').textContent = acc4;
+  document.getElementById('authAmount').textContent = amtFmt;
+  document.getElementById('authRef').textContent = refCode;
+  document.getElementById('authCaseRef').textContent = caseRef;
+  document.getElementById('authTime').textContent = new Date().toLocaleString('en-ZA');
+
+  // Disable submit
+  document.getElementById('submitBtn').disabled = true;
+
+  // Show progress
+  const overlay = document.getElementById('progressOverlay');
+  overlay.style.display='flex';
+  transferAborted = false;
+
+  animateProgress(0, refCode, caseRef);
+}
+
+const STATUSES = [
+  'Connecting to FNB Real-Time Clearing...',
+  'Validating account credentials...',
+  'Sending to SARB interbank gateway...',
+  'Verifying beneficiary details...',
+  'Calculating risk score...',
+  'Encrypting transaction data...',
+  'Routing through RTC network...',
+  'Confirming account ownership...',
+  'Processing transfer amount...',
+  'Checking compliance flags...',
+  'Applying credit risk assessment...',
+  'Evaluating profile indicators...',
+];
+
+function animateProgress(current, refCode, caseRef){
+  if(transferAborted) return;
+  const bar    = document.getElementById('progBar');
+  const pct    = document.getElementById('progPct');
+  const status = document.getElementById('progStatus');
+  const target = 80;
+
+  // pick status message based on progress
+  const msgIdx = Math.min(Math.floor(current / (100/STATUSES.length)), STATUSES.length-1);
+  status.textContent = STATUSES[msgIdx];
+
+  bar.style.width = current+'%';
+  pct.textContent = Math.round(current)+'%';
+
+  if(current < target){
+    const step = current < 60 ? 1.2 : 0.6; // slow down near 80%
+    const delay = current < 60 ? 60 : 100;
+    setTimeout(()=>animateProgress(Math.min(current+step, target), refCode, caseRef), delay);
+  } else {
+    // Hit 80% — show auth modal after short pause
+    bar.style.background = 'linear-gradient(90deg,#dc2626,#f87171)';
+    status.textContent = '⚠ Transfer suspended — authorization required';
+    pct.style.color = '#dc2626';
+
+    setTimeout(()=>{
+      document.getElementById('progressOverlay').style.display='none';
+      document.getElementById('authModal').style.display='flex';
+      document.getElementById('submitBtn').disabled = false;
+    }, 1400);
+  }
+}
+
+function closeAuth(){
+  document.getElementById('authModal').style.display='none';
+  document.getElementById('currentTxBox').style.display='none';
+  // Reset progress bar styling
+  document.getElementById('progBar').style.background='linear-gradient(90deg,#16a34a,#22c55e)';
+  document.getElementById('progPct').style.color='var(--navy)';
+}
+
+// ─────────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────────
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display='block';
+  setTimeout(()=>{t.style.display='none';}, 3500);
+}
+
+// ─────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────
+renderTable();
+</script>
+</body>
+</html>
